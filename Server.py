@@ -6,7 +6,7 @@ from WoodLampController import WoodLampController
 
 app = Flask( __name__ )
 scheduler = Scheduler( app )
-wood_lamp_controller = WoodLampController()
+wood_lamp_controller = WoodLampController( scheduler )
 
 
 @app.route( '/' )
