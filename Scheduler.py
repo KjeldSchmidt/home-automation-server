@@ -1,5 +1,6 @@
 from flask_apscheduler import APScheduler
 
+
 class Scheduler:
 	def __init__( self, app ):
 		self.scheduler = APScheduler()
