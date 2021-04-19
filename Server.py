@@ -6,7 +6,13 @@ from WoodLampController import WoodLampController
 
 app = Flask( __name__ )
 scheduler = Scheduler( app )
-wood_lamp_controller = WoodLampController( scheduler )
+wood_lamp_controller = WoodLampController( scheduler, '192.168.178.32' )
+
+
+@app.route( '/lamp/CityAtSundown' )
+def lame_redirect():
+	wood_lamp_controller.CityAtSundown()
+	return 'Ok'
 
 
 @app.route( '/' )
