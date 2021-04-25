@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Tuple
+from typing import Tuple, List
 
 import requests
 from flask import Flask
@@ -14,17 +14,33 @@ class WoodLampController:
 		self.scheduler: Scheduler = scheduler
 		self.lamp_ip = lamp_ip
 		self.next_sundown: datetime = None
-		self.schedule_scheduling()
-		self.schedule_irregular()
-		self.available_modes = None
+		self.available_modes: List[ str ] = [ ]
 
 		self.setup( app )
 
 	def setup( self, app: Flask ):
+		self.schedule_scheduling()
+		self.schedule_irregular()
 		self.setup_routes( app )
+		self.fetch_available_modes()
+
+	def produce_main_page_content( self ):
+		mode_links = [ f'<button onclick="fetch(\'/woodlamp/mode/{mode}\')">{mode}</a>' for mode in
+					   self.available_modes ]
+		return f"""
+		Next sundown at: {self.next_sundown} </br>
+		Set color mode: <br />
+		{'<br />'.join( mode_links )}
+		"""
 
 	def schedule_irregular( self ) -> None:
 		self.schedule_sundown_lamp()
+
+	def fetch_available_modes( self ) -> None:
+		response = requests.get( f'http://{self.lamp_ip}/getModes' )
+		mode_names = response.text.split( ',' )
+		mode_names = [ mode.strip() for mode in mode_names ]
+		self.available_modes = mode_names
 
 	def schedule_sundown_lamp( self ) -> None:
 		sun_times_json = requests.get( 'https://api.sunrise-sunset.org/json?lat=51&lng=7&formatted=0' )
