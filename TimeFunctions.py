@@ -3,8 +3,8 @@ from datetime import datetime
 import pytz
 
 
-def parse_to_utc( time: str, format: str ) -> datetime:
-	time_naive = datetime.strptime( time, format )
+def parse_to_utc( time: str, time_format: str ) -> datetime:
+	time_naive = datetime.strptime( time, time_format )
 	return time_naive.replace( tzinfo=pytz.utc )
 
 
