@@ -6,7 +6,7 @@ import requests
 from flask import Flask
 
 from Scheduler import Scheduler
-from TimeFunctions import parse_to_utc
+from TimeFunctions import parse_to_utc, local_time_today
 
 
 class WoodLampController:
@@ -25,12 +25,16 @@ class WoodLampController:
 		self.fetch_available_modes()
 
 	def produce_main_page_content( self ):
-		mode_links = [ f'<button onclick="fetch(\'/woodlamp/mode/{mode}\')">{mode}</a>' for mode in
-					   self.available_modes ]
+		def make_link( mode ):
+			return f'<button onclick="fetch(\'/woodlamp/mode/{mode}\')">{mode}</a>'
+
+		mode_links = [ make_link( mode ) for mode in self.available_modes ]
+		modes_block = f'<div class="modes_block"> {"<br />".join( mode_links )} </div>'
+		sundown_time_string = local_time_today( self.next_sundown )
+
 		return f"""
-		Next sundown at: {self.next_sundown} </br>
-		Set color mode: <br />
-		{'<br />'.join( mode_links )}
+		Next sundown at: {sundown_time_string} </br>
+		Set color mode:	{modes_block}
 		"""
 
 	def schedule_irregular( self ) -> None:
