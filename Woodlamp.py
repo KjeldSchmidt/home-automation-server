@@ -9,8 +9,8 @@ from Scheduler import Scheduler
 from TimeFunctions import parse_to_utc, local_time_today
 
 
-class WoodLampController:
-	def __init__( self, scheduler: Scheduler, lamp_ip: str, app: Flask ):
+class Woodlamp:
+	def __init__( self, app: Flask, scheduler: Scheduler, lamp_ip: str ):
 		self.scheduler: Scheduler = scheduler
 		self.lamp_ip = lamp_ip
 		self.next_sundown: datetime = None

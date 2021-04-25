@@ -1,16 +1,21 @@
 from flask import Flask
 
+from Alarm import Alarm
 from Scheduler import Scheduler
-from WoodLampController import WoodLampController
+from Woodlamp import Woodlamp
 
 app = Flask( __name__ )
 scheduler = Scheduler( app )
-wood_lamp_controller = WoodLampController( scheduler, '192.168.178.26', app )
+
+woodlamp = Woodlamp( app, scheduler, '192.168.178.26' )
+alarm = Alarm( scheduler, app, woodlamp )
+
+controllers = [ woodlamp, alarm ]
 
 
 @app.route( '/' )
 def main_page():
-	return wood_lamp_controller.produce_main_page_content()
+	return '<hr />'.join( [ controller.produce_main_page_content() for controller in controllers ] )
 
 
 if __name__ == '__main__':
