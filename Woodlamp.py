@@ -30,11 +30,30 @@ class Woodlamp:
 
 		mode_links = [ make_link( mode ) for mode in self.available_modes ]
 		modes_block = f'<div class="modes_block"> {"<br />".join( mode_links )} </div>'
+		color_wheel_block = self.make_color_wheel_block()
 		sundown_time_string = local_time_today( self.next_sundown )
 
 		return f"""
 		Next sundown at: {sundown_time_string} </br>
-		Set color mode:	{modes_block}
+		Set color mode:	{modes_block} </br>
+		{color_wheel_block}
+		"""
+
+	@staticmethod
+	def make_color_wheel_block():
+		return """
+			<div id="picker"></div>
+		<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+		<script type="text/javascript">
+			var colorPicker = new iro.ColorPicker('#picker', {
+				layoutDirection: "horizontal"
+			});
+	
+			colorPicker.on('color:change', color => {
+				const colorString = "0x" + color.hexString.substring(1);
+				fetch( "/woodlamp/mode/SingleColor&color=" + colorString );
+			});
+		</script>
 		"""
 
 	def schedule_irregular( self ) -> None:
