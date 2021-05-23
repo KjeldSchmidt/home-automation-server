@@ -10,9 +10,9 @@ from TimeFunctions import parse_to_utc, local_time_today
 
 
 class Woodlamp:
-	def __init__( self, app: Flask, scheduler: Scheduler, lamp_ip: str ):
+	def __init__( self, app: Flask, scheduler: Scheduler, lamp_ip: List[str] ):
 		self.scheduler: Scheduler = scheduler
-		self.lamp_ip = lamp_ip
+		self.lamp_ips = lamp_ip
 		self.next_sundown: datetime = None
 		self.available_modes: List[ str ] = [ ]
 
@@ -60,7 +60,7 @@ class Woodlamp:
 		self.schedule_sundown_lamp()
 
 	def fetch_available_modes( self ) -> None:
-		response = requests.get( f'http://{self.lamp_ip}/getModes' )
+		response = requests.get( f'http://{self.lamp_ips[0 ]}/getModes' )
 		mode_names = response.text.split( ',' )
 		mode_names = [ mode.strip() for mode in mode_names ]
 		self.available_modes = mode_names
@@ -87,7 +87,11 @@ class Woodlamp:
 		)
 
 	def set_mode( self, mode: str ) -> Tuple[ str, int ]:
-		response = requests.get( f'http://{self.lamp_ip}/setMode?newMode={mode}' )
+		response = None
+		for lamp_ip in self.lamp_ips:
+			response = requests.get( f'http://{lamp_ip}/setMode?newMode={mode}' )
+		if response is None:
+			return "No IPs", 500
 		return response.text, response.status_code
 
 	def setup_routes( self, app: Flask ):

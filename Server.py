@@ -7,7 +7,7 @@ from Woodlamp import Woodlamp
 app = Flask( __name__ )
 scheduler = Scheduler( app )
 
-woodlamp = Woodlamp( app, scheduler, '192.168.178.26' )
+woodlamp = Woodlamp( app, scheduler, ['192.168.178.24', '192.168.178.28', '192.168.178.27' ] )
 alarm = Alarm( scheduler, app, woodlamp )
 
 controllers = [ woodlamp, alarm ]
