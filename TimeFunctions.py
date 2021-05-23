@@ -16,7 +16,7 @@ def local_time_today( time: datetime ) -> str:
 def get_next_valid_time( time_str: str, time_format: str = '%H:%M' ) -> datetime:
 	time_of_day = datetime.strptime( time_str, time_format )
 	now = datetime.now()
-	candidate = now.replace( hour=time_of_day.hour, minute=time_of_day.minute )
+	candidate = now.replace( hour=time_of_day.hour, minute=time_of_day.minute, second=0, microsecond=0 )
 	if candidate > now:
 		return candidate
 	else:
