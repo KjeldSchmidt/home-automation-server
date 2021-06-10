@@ -16,3 +16,6 @@ class Scheduler:
 		:param func: callable (or a textual reference to one) to run at the given time
 		"""
 		return self._scheduler.add_job( job_id, func, **kwargs )
+
+	def remove_job( self, job_id, jobstore=None ):
+		self._scheduler.remove_job( job_id, jobstore )
