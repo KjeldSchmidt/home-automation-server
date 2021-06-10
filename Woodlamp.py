@@ -3,13 +3,13 @@ from typing import Tuple, List
 
 import requests
 from flask import Flask
+from flask_apscheduler import APScheduler
 
-from Scheduler import Scheduler
 
 
 class Woodlamp:
-	def __init__( self, app: Flask, scheduler: Scheduler, lamp_ips: List[str] ):
-		self.scheduler: Scheduler = scheduler
+	def __init__( self, app: Flask, scheduler: APScheduler, lamp_ips: List[str] ):
+		self.scheduler: APScheduler = scheduler
 		self.lamp_ips = lamp_ips
 		self.available_modes: List[ str ] = [ ]
 

@@ -1,11 +1,11 @@
 from flask import Flask
 
 from Alarm import Alarm
-from Scheduler import Scheduler
+from Scheduler import make_scheduler
 from Woodlamp import Woodlamp
 
 app = Flask( __name__ )
-scheduler = Scheduler( app )
+scheduler = make_scheduler( app )
 
 woodlamp = Woodlamp( app, scheduler, ['192.168.178.24', '192.168.178.28', '192.168.178.27' ] )
 alarm = Alarm( scheduler, app, woodlamp )
