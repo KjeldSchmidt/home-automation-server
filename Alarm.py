@@ -3,15 +3,15 @@ from uuid import uuid1
 
 from apscheduler.job import Job
 from flask import Flask, request, redirect
+from flask_apscheduler import APScheduler
 
-from Scheduler import Scheduler
 from TimeFunctions import get_next_valid_time, local_time_today
 from Woodlamp import Woodlamp
 
 
 class Alarm:
-	def __init__( self, scheduler: Scheduler, app: Flask, woodlamp: Woodlamp ):
-		self.scheduler = scheduler
+	def __init__( self, scheduler: APScheduler, app: Flask, woodlamp: Woodlamp ):
+		self.scheduler: APScheduler = scheduler
 		self.woodlamp = woodlamp
 		self.setup_routes( app )
 		self.alarms: Dict[ str, Job ] = { }
