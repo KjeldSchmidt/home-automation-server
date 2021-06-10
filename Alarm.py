@@ -2,7 +2,7 @@ from typing import List
 from uuid import uuid1
 
 from apscheduler.job import Job
-from flask import Flask, request
+from flask import Flask, request, redirect
 
 from Scheduler import Scheduler
 from TimeFunctions import get_next_valid_time, local_time_today
@@ -41,4 +41,4 @@ class Alarm:
 				next_run_time=alarm_time
 			)
 			self.alarms.append( new_alarm )
-			return "OK"
+			return redirect( "/" )
