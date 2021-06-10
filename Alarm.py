@@ -1,7 +1,11 @@
+from typing import List
+from uuid import uuid1
+
+from apscheduler.job import Job
 from flask import Flask, request
 
 from Scheduler import Scheduler
-from TimeFunctions import get_next_valid_time
+from TimeFunctions import get_next_valid_time, local_time_today
 from Woodlamp import Woodlamp
 
 
@@ -10,13 +14,17 @@ class Alarm:
 		self.scheduler = scheduler
 		self.woodlamp = woodlamp
 		self.setup_routes( app )
+		self.alarms: List[ Job ] = [ ]
 
-	@staticmethod
-	def produce_main_page_content():
-		return '''
+	def produce_main_page_content( self ):
+		alarm_elements = [ local_time_today( alarm.next_run_time ) for alarm in self.alarms ]
+		set_alarms = '<br />'.join( alarm_elements )
+		return f'''
 			<form class="alarm-form" method="post" action="/alarm">
 				<input type="time" name="time" />
 				<input type="submit" value="Set Alarm" />
+				<br />
+				{set_alarms}
 			</form>
 		'''
 
@@ -27,9 +35,10 @@ class Alarm:
 		@app.route( '/alarm', methods=[ 'POST' ] )
 		def set_alarm():
 			alarm_time = get_next_valid_time( request.form[ 'time' ] )
-			self.scheduler.add_job(
-				"Wake up Kjeld",
+			new_alarm = self.scheduler.add_job(
+				f"alarm {uuid1()}",
 				self.wake_up,
 				next_run_time=alarm_time
 			)
+			self.alarms.append( new_alarm )
 			return "OK"
