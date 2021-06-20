@@ -1,6 +1,7 @@
 from flask import Flask
 
 from Alarm import Alarm
+from CeilingLights import CeilingLights
 from Scheduler import make_scheduler
 from Woodlamp import Woodlamp
 
@@ -9,8 +10,9 @@ make_scheduler( app )
 
 woodlamp = Woodlamp( app, '192.168.178.26' )
 alarm = Alarm( app, woodlamp )
+ceiling = CeilingLights( app )
 
-controllers = [ woodlamp, alarm ]
+controllers = [ woodlamp, alarm, ceiling ]
 
 
 @app.route( '/' )
