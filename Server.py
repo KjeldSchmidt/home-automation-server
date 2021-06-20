@@ -5,10 +5,10 @@ from Scheduler import make_scheduler
 from Woodlamp import Woodlamp
 
 app = Flask( __name__ )
-scheduler = make_scheduler( app )
+make_scheduler( app )
 
-woodlamp = Woodlamp( app, scheduler, ['192.168.178.24', '192.168.178.28', '192.168.178.27' ] )
-alarm = Alarm( scheduler, app, woodlamp )
+woodlamp = Woodlamp( app, ['192.168.178.24', '192.168.178.28', '192.168.178.27' ] )
+alarm = Alarm( app, woodlamp )
 
 controllers = [ woodlamp, alarm ]
 

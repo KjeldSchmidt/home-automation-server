@@ -8,7 +8,7 @@ from flask_apscheduler import APScheduler
 
 
 class Woodlamp:
-	def __init__( self, app: Flask, scheduler: APScheduler, lamp_ips: List[str] ):
+	def __init__( self, app: Flask, lamp_ips: List[str] ):
 		self.scheduler: APScheduler = scheduler
 		self.lamp_ips = lamp_ips
 		self.available_modes: List[ str ] = [ ]

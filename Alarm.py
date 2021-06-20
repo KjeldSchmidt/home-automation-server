@@ -6,6 +6,7 @@ from typing import Tuple, Dict, Union
 from flask import Flask, request, redirect
 from flask_apscheduler import APScheduler
 
+from Scheduler import scheduler
 from TimeFunctions import get_next_valid_time, local_time_today
 from Woodlamp import Woodlamp
 
@@ -26,7 +27,7 @@ def load_config():
 
 
 class Alarm:
-	def __init__( self, scheduler: APScheduler, app: Flask, woodlamp: Woodlamp ):
+	def __init__( self, app: Flask, woodlamp: Woodlamp ):
 		self.scheduler: APScheduler = scheduler
 		self.woodlamp = woodlamp
 		self.config: Dict[str, Union[None, Tuple[str, datetime]]] = load_config()
