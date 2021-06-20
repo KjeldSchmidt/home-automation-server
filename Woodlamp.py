@@ -6,11 +6,12 @@ import requests
 from flask import Flask
 from flask_apscheduler import APScheduler
 
+from Scheduler import scheduler
 from TimeFunctions import parse_to_utc, local_time_today
 
 
 class Woodlamp:
-	def __init__( self, app: Flask, scheduler: APScheduler, lamp_ip: str ):
+	def __init__( self, app: Flask, lamp_ip: str ):
 		self.scheduler: APScheduler = scheduler
 		self.lamp_ip = lamp_ip
 		self.next_sundown: datetime = None

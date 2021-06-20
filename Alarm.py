@@ -4,12 +4,13 @@ from apscheduler.job import Job
 from flask import Flask, request, redirect
 from flask_apscheduler import APScheduler
 
+from Scheduler import scheduler
 from TimeFunctions import get_next_valid_time, local_time_today
 from Woodlamp import Woodlamp
 
 
 class Alarm:
-	def __init__( self, scheduler: APScheduler, app: Flask, woodlamp: Woodlamp ):
+	def __init__( self, app: Flask, woodlamp: Woodlamp ):
 		self.scheduler: APScheduler = scheduler
 		self.woodlamp = woodlamp
 		self.setup_routes( app )
