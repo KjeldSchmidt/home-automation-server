@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 from typing import Tuple, List
 
 import requests
@@ -14,7 +13,7 @@ class Woodlamp:
 	def __init__( self, app: Flask, lamp_ip: str ):
 		self.scheduler: APScheduler = scheduler
 		self.lamp_ip = lamp_ip
-		self.next_sundown: datetime = None
+		self.next_sundown: str = "No sundown time set"
 		self.available_modes: List[ str ] = [ ]
 
 		self.setup( app )
@@ -32,10 +31,9 @@ class Woodlamp:
 		mode_links = [ make_link( mode ) for mode in self.available_modes ]
 		modes_block = f'<div class="modes_block"> {"<br />".join( mode_links )} </div>'
 		color_wheel_block = self.make_color_wheel_block()
-		sundown_time_string = local_time_today( self.next_sundown )
 
 		return f"""
-		Next sundown at: {sundown_time_string} </br>
+		Next sundown at: {self.next_sundown} </br>
 		Set color mode:	{modes_block} </br>
 		{color_wheel_block}
 		"""
@@ -72,12 +70,12 @@ class Woodlamp:
 		twilight_start_string = sun_times_times_utc[ 'civil_twilight_end' ][ :-6 ]
 		twilight_start_utc = parse_to_utc( twilight_start_string, '%Y-%m-%dT%H:%M:%S' )
 
-		self.next_sundown = twilight_start_utc
+		self.next_sundown = local_time_today( twilight_start_utc )
 		self.scheduler.add_job(
 			"Turn on city lights",
 			self.set_mode,
 			args=[ 'CityAtSundown' ],
-			next_run_time=self.next_sundown
+			next_run_time=twilight_start_utc
 		)
 
 	def schedule_scheduling( self ) -> None:
