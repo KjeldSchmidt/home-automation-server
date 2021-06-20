@@ -5,13 +5,13 @@ import requests
 from flask import Flask
 from flask_apscheduler import APScheduler
 
-from Scheduler import scheduler
+import Scheduler
 from TimeFunctions import parse_to_utc, local_time_today
 
 
 class Woodlamp:
 	def __init__( self, app: Flask, lamp_ip: str ):
-		self.scheduler: APScheduler = scheduler
+		self.scheduler: APScheduler = Scheduler.scheduler
 		self.lamp_ip = lamp_ip
 		self.next_sundown: str = "No sundown time set"
 		self.available_modes: List[ str ] = [ ]
@@ -26,10 +26,10 @@ class Woodlamp:
 
 	def produce_main_page_content( self ):
 		def make_link( mode ):
-			return f'<button onclick="fetch(\'/woodlamp/mode/{mode}\')">{mode}</a>'
+			return f'<button onclick="fetch(\'/woodlamp/mode/{mode}\')">{mode}</button>'
 
 		mode_links = [ make_link( mode ) for mode in self.available_modes ]
-		modes_block = f'<div class="modes_block"> {"<br />".join( mode_links )} </div>'
+		modes_block = f'<div class="modes_block"> {"".join( mode_links )} </div>'
 		color_wheel_block = self.make_color_wheel_block()
 
 		return f"""
