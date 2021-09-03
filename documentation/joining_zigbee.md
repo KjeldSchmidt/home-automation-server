@@ -1,0 +1,7 @@
+- `sudo sytsemctl stop zigbee2mqtt`
+- `cd /opt/zigbee2mqtt`
+- `npm start`
+- Connect according to [instructions](https://www.zigbee2mqtt.io/information/supported_devices.html)
+- Get ID from log
+- End the npm process
+- `sudo sytsemctl start zigbee2mqtt`
