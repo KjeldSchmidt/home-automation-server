@@ -1,9 +1,9 @@
 import os
 import pickle
 from datetime import datetime
-from typing import Callable, Tuple, Dict, Union
+from typing import Tuple, Dict, Union
 
-from flask import Flask, request
+from flask import Flask, request, redirect
 
 from Scheduler import Scheduler
 from TimeFunctions import get_next_valid_time, local_time_today
@@ -55,6 +55,11 @@ class Alarm:
 				<input type="submit" value="Set Evening Light Time" />
 				<input type="button" value="Delete Evening Light Time" onclick="fetch('/evening', {{method: 'DELETE'}})" />
 			</form>
+			<form class="alarm-form" method="post" action="/night">
+				<input type="time" name="time" value="{evening_value}" />
+				<input type="submit" value="Set Night Light Time" />
+				<input type="button" value="Delete Night Light Time" onclick="fetch('/night', {{method: 'DELETE'}})" />
+			</form>
 		'''
 
 	def morning_lights( self ):
@@ -94,14 +99,14 @@ class Alarm:
 			self.reset_jobs()
 			self.save_config()
 			self.schedule_lights()
-			return "OK"
+			return redirect( "/" )
 
 		def delete_handler( key: str ):
 			self.config[ key ] = None
 			self.reset_jobs()
 			self.schedule_lights()
 			self.save_config()
-			return "OK"
+			return redirect( "/" )
 
 		@app.route( '/morning', methods=[ 'POST' ] )
 		def set_morning_alarm():
@@ -111,6 +116,10 @@ class Alarm:
 		def set_evening_alarm():
 			return post_handler( "evening_lights_id", "CityAtSundown" )
 
+		@app.route( '/night', methods=[ 'POST' ] )
+		def set_night_alarm():
+			return post_handler( "night_lights_id", "LightsOut" )
+
 		@app.route( '/morning', methods=[ 'DELETE' ] )
 		def remove_morning_alarm():
 			return delete_handler( "morning_lights_id" )
@@ -118,3 +127,7 @@ class Alarm:
 		@app.route( '/evening', methods=[ 'DELETE' ] )
 		def remove_evening_alarm():
 			return delete_handler( "evening_lights_id" )
+
+		@app.route( '/night', methods=[ 'DELETE' ] )
+		def remove_night_alarm():
+			return delete_handler( "night_lights_id" )
