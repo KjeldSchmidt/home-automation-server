@@ -1,15 +1,12 @@
 from flask import Flask
 
-import MQTTClient
-
 
 class CeilingLights:
-	def __init__( self, app: Flask ):
+	def __init__( self, app: Flask, mqtt_client ):
 		self.setup_routes( app )
-		self.client = MQTTClient.client
+		self.client = mqtt_client
 		self.lamp_ids = [
-			'0x680ae2fffe6a2ac5',
-			'0xbc33acfffe59a606',
+			'0x000d6ffffe35eed7',
 		]
 
 	@staticmethod

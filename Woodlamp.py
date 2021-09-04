@@ -56,16 +56,15 @@ class Woodlamp:
 		mode_names = [ mode.strip() for mode in mode_names ]
 		self.available_modes = mode_names
 
-	def set_mode( self, mode: str ) -> Tuple[ str, int ]:
+	def set_mode( self, mode: str ):
 		def set_individual_mode(ip):
 			requests.get( f'http://{ip}/setMode?newMode={mode}' )
 
 		for lamp_ip in self.lamp_ips:
 			Thread(target=set_individual_mode, args=(lamp_ip,)).start()
 
-		return 'Ok', 200
-
 	def setup_routes( self, app: Flask ):
 		@app.route( '/woodlamp/mode/<string:mode>' )
 		def set_mode( mode: str ):
-			return self.set_mode( mode )
+			self.set_mode( mode )
+			return 'Ok', 200
