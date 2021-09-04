@@ -5,6 +5,7 @@ import requests
 from flask import Flask
 from flask_apscheduler import APScheduler
 
+from Scheduler import scheduler
 
 
 class Woodlamp:
