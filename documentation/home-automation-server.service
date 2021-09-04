@@ -1,0 +1,14 @@
+[Unit]
+Description=Home Automation Server
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=pi
+ExecStart=python3 /home/pi/home-automation-server/Server.py
+
+[Install]
+WantedBy=multi-user.target
