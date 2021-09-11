@@ -71,7 +71,7 @@ class Alarm:
 
 	def reset_jobs( self ):
 		for job_id, value in self.config.items():
-			if self.scheduler.get_job( job_id ) is not None:
+			if self.scheduler.get_job( job_id ) is None:
 				continue
 
 			self.scheduler.remove_job( job_id )
