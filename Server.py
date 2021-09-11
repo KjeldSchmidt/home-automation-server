@@ -20,9 +20,26 @@ controllers = [ woodlamp, alarm, ceiling ]
 IkeaRemote(ceiling, woodlamp, mqtt_client)
 
 
+style = """
+	<style>
+		body {
+			font-size: 1.5rem;
+			max-width: 80%;
+			width: 1100px;
+			margin: auto;
+			padding: 1rem;
+		}
+		button {
+			padding: 0.5rem;
+		}
+	</style>
+	"""
+
+
 @app.route( '/' )
 def main_page():
-	return '<hr />'.join( [ controller.produce_main_page_content() for controller in controllers ] )
+	content = '<hr />'.join( [ controller.produce_main_page_content() for controller in controllers ] )
+	return style + content
 
 
 if __name__ == '__main__':
