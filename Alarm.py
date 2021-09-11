@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Tuple, Dict, Union
 
 from flask import Flask, request, redirect
+from flask_apscheduler import APScheduler
 
 from Scheduler import scheduler
 from TimeFunctions import get_next_valid_time, local_time_today
@@ -13,7 +14,7 @@ from Woodlamp import Woodlamp
 def load_config():
 	filename = 'alarm_config.pickle'
 	if not os.path.isfile( filename ):
-		with open(filename, 'wb') as file:
+		with open( filename, 'wb' ) as file:
 			pickle.dump(
 				{
 					"morning_lights_id": None,
@@ -22,26 +23,27 @@ def load_config():
 				file
 			)
 
-	return pickle.load(open(filename, 'rb'))
+	return pickle.load( open( filename, 'rb' ) )
 
 
 class Alarm:
 	def __init__( self, app: Flask, woodlamp: Woodlamp ):
+		self.scheduler: APScheduler = scheduler
 		self.woodlamp = woodlamp
-		self.config: Dict[str, Union[None, Tuple[str, datetime]]] = load_config()
+		self.config: Dict[ str, Union[ None, Tuple[ str, datetime ] ] ] = load_config()
 		self.schedule_lights()
 		self.setup_routes( app )
 
 	def produce_main_page_content( self ):
 		morning_value = ""
-		if self.config["morning_lights_id"] is not None:
-			morning: datetime = self.config["morning_lights_id"][1]
-			morning_value = local_time_today(morning)
+		if self.config[ "morning_lights_id" ] is not None:
+			morning: datetime = self.config[ "morning_lights_id" ][ 1 ]
+			morning_value = local_time_today( morning )
 
 		evening_value = ""
-		if self.config["evening_lights_id"] is not None:
-			evening: datetime = self.config["evening_lights_id"][1]
-			evening_value = local_time_today(evening)
+		if self.config[ "evening_lights_id" ] is not None:
+			evening: datetime = self.config[ "evening_lights_id" ][ 1 ]
+			evening_value = local_time_today( evening )
 
 		return f'''
 			<form class="alarm-form" method="post" action="/morning">
@@ -69,10 +71,10 @@ class Alarm:
 
 	def reset_jobs( self ):
 		for job_id, value in self.config.items():
-			if scheduler.get_job(job_id) is not None:
+			if self.scheduler.get_job( job_id ) is not None:
 				continue
 
-			scheduler.remove_job(job_id)
+			self.scheduler.remove_job( job_id )
 
 	def schedule_lights( self ):
 		for job_id, value in self.config.items():
@@ -80,7 +82,7 @@ class Alarm:
 				continue
 			mode, time = value
 
-			scheduler.add_job(
+			self.scheduler.add_job(
 				job_id,
 				self.woodlamp.set_mode,
 				args=[ mode ],
