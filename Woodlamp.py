@@ -1,5 +1,5 @@
 from threading import Thread
-from typing import Tuple, List
+from typing import List
 
 import requests
 from flask import Flask
@@ -9,7 +9,7 @@ from Scheduler import scheduler
 
 
 class Woodlamp:
-	def __init__( self, app: Flask, lamp_ips: List[str] ):
+	def __init__( self, app: Flask, lamp_ips: List[ str ] ):
 		self.scheduler: APScheduler = scheduler
 		self.lamp_ips = lamp_ips
 		self.available_modes: List[ str ] = [ ]
@@ -24,7 +24,7 @@ class Woodlamp:
 		def make_link( mode ):
 			return f'<button onclick="fetch(\'/woodlamp/mode/{mode}\')">{mode}</a>'
 
-		mode_links = [ make_link( mode ) for mode in self.available_modes ]
+		mode_links = [ make_link( mode ) for mode in self.available_modes[ :-1 ] ]
 		modes_block = f'<div class="modes_block"> {"<br />".join( mode_links )} </div>'
 		color_wheel_block = self.make_color_wheel_block()
 
@@ -57,11 +57,11 @@ class Woodlamp:
 		self.available_modes = mode_names
 
 	def set_mode( self, mode: str ):
-		def set_individual_mode(ip):
+		def set_individual_mode( ip ):
 			requests.get( f'http://{ip}/setMode?newMode={mode}' )
 
 		for lamp_ip in self.lamp_ips:
-			Thread(target=set_individual_mode, args=(lamp_ip,)).start()
+			Thread( target=set_individual_mode, args=(lamp_ip,) ).start()
 
 	def setup_routes( self, app: Flask ):
 		@app.route( '/woodlamp/mode/<string:mode>' )
