@@ -12,9 +12,9 @@ make_scheduler( app )
 
 mqtt_client = MQTTClient.get_client()
 
-woodlamp = Woodlamp( app, ['192.168.178.24', '192.168.178.28', '192.168.178.27' ] )
+woodlamp = Woodlamp( app, [ '192.168.178.24', '192.168.178.28', '192.168.178.27' ] )
 alarm = Alarm( app, woodlamp )
-ceiling = CeilingLights( app, mqtt_client )
+ceiling = CeilingLights( app, mqtt_client, [ '0x000d6ffffe35eed7' ] )
 controllers = [ woodlamp, alarm, ceiling ]
 
 IkeaRemote(ceiling, woodlamp, mqtt_client)

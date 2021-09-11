@@ -1,13 +1,15 @@
+from typing import Iterable, Union
+
 from flask import Flask
+
+from paho.mqtt.client import Client as MqttClient
 
 
 class CeilingLights:
-	def __init__( self, app: Flask, mqtt_client ):
+	def __init__( self, app: Flask, mqtt_client: MqttClient, lamp_ids: Iterable[ str ] ):
 		self.setup_routes( app )
-		self.client = mqtt_client
-		self.lamp_ids = [
-			'0x000d6ffffe35eed7',
-		]
+		self.client: MqttClient = mqtt_client
+		self.lamp_ids: Iterable[ str ] = lamp_ids
 
 	@staticmethod
 	def produce_main_page_content():
@@ -30,13 +32,19 @@ class CeilingLights:
 				payload=payload
 			)
 
+	def set_brightness( self, brightness: int ):
+		self.send_to_all_lamps( f'{{ "brightness": "{brightness}" }}' )
+
+	def set_color_temperature( self, color_temperature: Union[int, str] ):
+		self.send_to_all_lamps( f'{{ "color_temp": "{color_temperature}" }}' )
+
 	def setup_routes( self, app: Flask ):
 		@app.route( '/ceiling/brightness/<int:brightness>' )
 		def ceiling_lights_brightness( brightness: int ):
-			self.send_to_all_lamps( f'{{ "brightness": "{brightness}" }}' )
+			self.set_brightness(brightness)
 			return "Ok", 200
 
 		@app.route( '/ceiling/temp/<int:color_temp>' )
 		def ceiling_lights_color( color_temp: int ):
-			self.send_to_all_lamps( f'{{ "color_temp": "{color_temp}" }}' )
+			self.set_color_temperature( color_temp )
 			return "Ok", 200
