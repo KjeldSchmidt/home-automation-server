@@ -45,6 +45,11 @@ class Alarm:
 			evening: datetime = self.config[ "evening_lights_id" ][ 1 ]
 			evening_value = local_time_today( evening )
 
+		night_value = ""
+		if self.config[ "night_lights_id" ] is not None:
+			night: datetime = self.config[ "night_lights_id" ][ 1 ]
+			night_value = local_time_today( night )
+
 		return f'''
 			<form class="alarm-form" method="post" action="/morning">
 				<input type="time" name="time" value="{morning_value}" />
@@ -57,17 +62,11 @@ class Alarm:
 				<input type="button" value="Delete Evening Light Time" onclick="fetch('/evening', {{method: 'DELETE'}})" />
 			</form>
 			<form class="alarm-form" method="post" action="/night">
-				<input type="time" name="time" value="{evening_value}" />
+				<input type="time" name="time" value="{night_value}" />
 				<input type="submit" value="Set Night Light Time" />
 				<input type="button" value="Delete Night Light Time" onclick="fetch('/night', {{method: 'DELETE'}})" />
 			</form>
 		'''
-
-	def morning_lights( self ):
-		self.woodlamp.set_mode( 'WakeUp' )
-
-	def evening_lights( self ):
-		self.woodlamp.set_mode( 'CityAtSundown' )
 
 	def reset_jobs( self ):
 		for job_id, value in self.config.items():
