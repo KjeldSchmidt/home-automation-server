@@ -41,7 +41,7 @@ class Woodlamp:
 	@staticmethod
 	def make_color_wheel_block():
 		return """
-			<div id="picker"></div>
+		<div id="picker"></div>
 		<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
 		<script type="text/javascript">
 			var colorPicker = new iro.ColorPicker('#picker', {
