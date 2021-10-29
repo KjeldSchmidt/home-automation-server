@@ -16,6 +16,8 @@ class Woodlamp:
 		self.next_sundown: str = "No sundown time set"
 		self.available_modes: List[ str ] = [ ]
 
+		self.current_mode: str | None = None
+
 		self.setup( app )
 
 	def setup( self, app: Flask ):
@@ -86,6 +88,7 @@ class Woodlamp:
 		)
 
 	def set_mode( self, mode: str ) -> Tuple[ str, int ]:
+		self.current_mode = mode
 		response = requests.get( f'http://{self.lamp_ip}/setMode?newMode={mode}' )
 		return response.text, response.status_code
 

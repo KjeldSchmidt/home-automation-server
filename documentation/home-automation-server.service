@@ -1,3 +1,7 @@
+; Store in /etc/systemd/service
+; Register via `systemctl enable home-automation-server`
+; Update via `systemctl daemon-reload`
+
 [Unit]
 Description=Home Automation Server
 After=network.target
