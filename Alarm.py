@@ -7,6 +7,7 @@ from flask import Flask, request, redirect
 from flask_apscheduler import APScheduler
 
 import Scheduler
+from CeilingLights import CeilingLights
 from TimeFunctions import get_next_valid_time, local_time_today
 from Woodlamp import Woodlamp
 
@@ -27,10 +28,11 @@ def load_config():
 
 
 class Alarm:
-	def __init__( self, app: Flask, woodlamp: Woodlamp ):
+	def __init__( self, app: Flask, woodlamp: Woodlamp, ceiling_lights: CeilingLights ):
 		self.scheduler: APScheduler = Scheduler.scheduler
 		self.woodlamp = woodlamp
-		self.config: Dict[ str, Union[ None, Tuple[ str, datetime ] ] ] = load_config()
+		self.ceiling_lights = ceiling_lights
+		self.config: Dict[ str, Union[ None, Tuple[ datetime, str, int, int ] ] ] = load_config()
 		self.schedule_lights()
 		self.setup_routes( app )
 
@@ -75,16 +77,22 @@ class Alarm:
 
 			self.scheduler.remove_job( job_id )
 
+	def perform_alarm( self, mode: str, brightness: int, color_temp: int ) -> None:
+		self.woodlamp.set_mode( mode )
+		self.ceiling_lights.set_brightness( brightness )
+		self.ceiling_lights.set_color_temperature( color_temp )
+
 	def schedule_lights( self ):
+
 		for job_id, value in self.config.items():
 			if value is None:
 				continue
-			mode, time = value
+			time, mode, brightness, color_temp = value
 
 			self.scheduler.add_job(
 				job_id,
-				self.woodlamp.set_mode,
-				args=[ mode ],
+				self.perform_alarm,
+				args=[ mode, brightness, color_temp ],
 				trigger="cron", hour=time.hour, minute=time.minute, day="*"
 			)
 
@@ -93,9 +101,9 @@ class Alarm:
 		pickle.dump( self.config, open( filename, 'wb' ) )
 
 	def setup_routes( self, app ):
-		def post_handler( key: str, mode: str ):
+		def post_handler( key: str, mode: str, brightness: int, color_temp: int = 350 ):
 			alarm_time = get_next_valid_time( request.form[ 'time' ] )
-			self.config[ key ] = (mode, alarm_time)
+			self.config[ key ] = (alarm_time, mode, brightness, color_temp)
 			self.reset_jobs()
 			self.save_config()
 			self.schedule_lights()
@@ -110,15 +118,15 @@ class Alarm:
 
 		@app.route( '/morning', methods=[ 'POST' ] )
 		def set_morning_alarm():
-			return post_handler( "morning_lights_id", "WakeUp" )
+			return post_handler( "morning_lights_id", "WakeUp", 255, 250 )
 
 		@app.route( '/evening', methods=[ 'POST' ] )
 		def set_evening_alarm():
-			return post_handler( "evening_lights_id", "CityAtSundown" )
+			return post_handler( "evening_lights_id", "CityAtSundown", 100, 254 )
 
 		@app.route( '/night', methods=[ 'POST' ] )
 		def set_night_alarm():
-			return post_handler( "night_lights_id", "LightsOut" )
+			return post_handler( "night_lights_id", "LightsOut", 0 )
 
 		@app.route( '/morning', methods=[ 'DELETE' ] )
 		def remove_morning_alarm():
