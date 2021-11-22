@@ -39,17 +39,17 @@ class Alarm:
 	def produce_main_page_content( self ):
 		morning_value = ""
 		if self.config.get( "morning_lights_id" ) is not None:
-			morning: datetime = self.config[ "morning_lights_id" ][ 1 ]
+			morning: datetime = self.config[ "morning_lights_id" ][ 0 ]
 			morning_value = local_time_today( morning )
 
 		evening_value = ""
 		if self.config.get( "evening_lights_id" ) is not None:
-			evening: datetime = self.config[ "evening_lights_id" ][ 1 ]
+			evening: datetime = self.config[ "evening_lights_id" ][ 0 ]
 			evening_value = local_time_today( evening )
 
 		night_value = ""
 		if self.config.get( "night_lights_id" ) is not None:
-			night: datetime = self.config[ "night_lights_id" ][ 1 ]
+			night: datetime = self.config[ "night_lights_id" ][ 0 ]
 			night_value = local_time_today( night )
 
 		return f'''
