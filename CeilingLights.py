@@ -2,9 +2,9 @@ import json
 import time
 from threading import Thread
 
+import MqttClient
 from flask import Flask
 
-import MqttClient
 from Woodlamp import Woodlamp
 
 
@@ -58,7 +58,7 @@ class CeilingLights:
 
 	def ping_lamps( self ):
 		while True:
-			mid = self.mqtt_client.publish(
+			message_id = self.mqtt_client.publish(
 				topic=f"zigbee2mqtt/{self.lamp_ids[ 0 ]}/get",
 				payload='{ "brightness": "" }'
 			)
