@@ -2,9 +2,9 @@ import json
 import time
 from threading import Thread
 
-import MqttClient
 from flask import Flask
 
+import MqttClient
 from Woodlamp import Woodlamp
 
 
@@ -48,7 +48,6 @@ class CeilingLights:
 		@app.route( '/ceiling/brightness/<int:brightness>' )
 		def ceiling_lights_brightness( brightness: int ):
 			self.send_to_all_lamps( f'{{ "brightness": "{brightness}" }}' )
-			self.ping_lamps()
 			return "Ok", 200
 
 		@app.route( '/ceiling/temp/<int:color_temp>' )
