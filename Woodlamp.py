@@ -30,6 +30,9 @@ class Woodlamp:
 		def make_link( mode ):
 			return f'<button onclick="fetch(\'/woodlamp/mode/{mode}\')">{mode}</button>'
 
+		if self.available_modes == [ ]:
+			self.fetch_available_modes()
+			
 		mode_links = [ make_link( mode ) for mode in self.available_modes ]
 		modes_block = f'<div class="modes_block"> {"".join( mode_links )} </div>'
 		color_wheel_block = self.make_color_wheel_block()
@@ -61,7 +64,11 @@ class Woodlamp:
 		self.schedule_sundown_lamp()
 
 	def fetch_available_modes( self ) -> None:
-		response = requests.get( f'http://{self.lamp_ip}/getModes' )
+		try:
+			response = requests.get( f'http://{self.lamp_ip}/getModes' )
+		except requests.exceptions.ConnectionError:
+			return
+
 		mode_names = response.text.split( ',' )
 		mode_names = [ mode.strip() for mode in mode_names ]
 		self.available_modes = mode_names
