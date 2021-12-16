@@ -1,6 +1,6 @@
 import os
 import pickle
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Tuple, Dict, Union
 
 from flask import Flask, request, redirect
@@ -19,7 +19,9 @@ def load_config():
 			pickle.dump(
 				{
 					"morning_lights_id": None,
-					"evening_lights_id": None
+					"morning_lights_off_id": None,
+					"evening_lights_id": None,
+					"night_lights_id": None,
 				},
 				file
 			)
@@ -104,6 +106,11 @@ class Alarm:
 		def post_handler( key: str, mode: str, brightness: int, color_temp: int = 350 ):
 			alarm_time = get_next_valid_time( request.form[ 'time' ] )
 			self.config[ key ] = (alarm_time, mode, brightness, color_temp)
+
+			if key == "morning_lights_id":
+				off_time = alarm_time + timedelta( hours = 1)
+				self.config[ "morning_lights_off_id" ] = (off_time, "LightsOut", 0, color_temp)
+
 			self.reset_jobs()
 			self.save_config()
 			self.schedule_lights()
@@ -111,6 +118,10 @@ class Alarm:
 
 		def delete_handler( key: str ):
 			self.config[ key ] = None
+
+			if key == "morning_lights_id":
+				self.config[ "morning_lights_off_id" ] = None
+
 			self.reset_jobs()
 			self.schedule_lights()
 			self.save_config()
