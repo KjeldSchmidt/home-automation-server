@@ -51,10 +51,7 @@ class Woodlamp:
 		"""
 
 	def fetch_available_modes( self ) -> None:
-		response = requests.get( f'http://{self.lamp_ips[ 1 ]}/getModes' )
-		mode_names = response.text.split( ',' )
-		mode_names = [ mode.strip() for mode in mode_names ]
-		self.available_modes = mode_names
+		self.available_modes = ["CityAtSundown", "GlobalColorTick", "LightsOut", "WakeUp", "Pacifica", "ColorPulse", "DiscoStrobo"]
 
 	def set_mode( self, mode: str ):
 		def set_individual_mode( ip ):
