@@ -32,7 +32,7 @@ class Woodlamp:
 
 		if self.available_modes == [ ]:
 			self.fetch_available_modes()
-			
+
 		mode_links = [ make_link( mode ) for mode in self.available_modes ]
 		modes_block = f'<div class="modes_block"> {"".join( mode_links )} </div>'
 		color_wheel_block = self.make_color_wheel_block()
@@ -74,7 +74,11 @@ class Woodlamp:
 		self.available_modes = mode_names
 
 	def schedule_sundown_lamp( self ) -> None:
-		sun_times_json = requests.get( 'https://api.sunrise-sunset.org/json?lat=51&lng=7&formatted=0' )
+		try:
+			sun_times_json = requests.get( 'https://api.sunrise-sunset.org/json?lat=51&lng=7&formatted=0' )
+		except Exception as e:
+			print( f"Error: Failure when fetching sunrise times. Error message: {e}" )
+			return
 		sun_times_times_utc = json.loads( sun_times_json.text )[ 'results' ]
 		twilight_start_string = sun_times_times_utc[ 'sunset' ][ :-6 ]
 		twilight_start_utc = parse_to_utc( twilight_start_string, '%Y-%m-%dT%H:%M:%S' )
