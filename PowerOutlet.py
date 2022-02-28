@@ -14,19 +14,19 @@ class PowerOutlet:
         Scheduler.scheduler.add_job(
             "Warn about PC turning off",
             lambda: self.woodlamp.set_mode("WarningLights"),
-            trigger="cron", hour=1, minute=0, day="*"
+            trigger="cron", hour=0, minute=0, day="*"
         )
 
         Scheduler.scheduler.add_job(
             "Turn off PC",
             self.turn_off,
-            trigger="cron", hour=1, minute=5, day="*"
+            trigger="cron", hour=0, minute=5, day="*"
         )
 
         Scheduler.scheduler.add_job(
             "Turn off warning lights",
             lambda: self.woodlamp.set_mode("LightsOut"),
-            trigger="cron", hour=1, minute=1, day="*"
+            trigger="cron", hour=0, minute=1, day="*"
         )
 
         Scheduler.scheduler.add_job(
