@@ -14,7 +14,7 @@ make_scheduler( app )
 mqtt_client = MQTTClient.get_client()
 
 woodlamp = Woodlamp( app, [ '192.168.178.24', '192.168.178.28', '192.168.178.27' ] )
-power_outlet = PowerOutlet( mqtt_client, "0x5c0272fffe7c6a76" )
+power_outlet = PowerOutlet( woodlamp, mqtt_client, "0x5c0272fffe7c6a76" )
 ceiling = CeilingLights( app, mqtt_client, [ '0x000d6ffffe35eed7' ] )
 alarm = Alarm( app, woodlamp, ceiling )
 controllers = [ woodlamp, alarm, ceiling ]
