@@ -5,11 +5,12 @@ from flask import Flask, request, redirect
 from flask_apscheduler import APScheduler
 
 import Scheduler
+from Controller import Controller
 from TimeFunctions import get_next_valid_time, local_time_today
 from Woodlamp import Woodlamp
 
 
-class Alarm:
+class Alarm(Controller):
     def __init__(self, app: Flask, woodlamp: Woodlamp):
         self.scheduler: APScheduler = Scheduler.scheduler
         self.woodlamp = woodlamp
@@ -22,19 +23,17 @@ class Alarm:
         alarm_elements = [self.make_alarm_component(alarm) for alarm in alarms]
         set_alarms = "<br />".join(alarm_elements)
         return f"""
-			<form class="alarm-form" method="post" action="/alarm">
-				<input type="time" name="time" />
-				<input type="submit" value="Set Alarm" />
-				<br />
-				{set_alarms}
-			</form>
-		"""
+            <form class="alarm-form" method="post" action="/alarm">
+                <input type="time" name="time" />
+                <input type="submit" value="Set Alarm" />
+                <br />
+                {set_alarms}
+            </form>
+        """
 
     @staticmethod
     def make_alarm_component(job: Job):
-        return f"""
-		{local_time_today( job.next_run_time )} <a href="/alarm/{job.id}/delete"> X </a> 
-		"""
+        return f"""{local_time_today( job.next_run_time )} <a href="/alarm/{job.id}/delete"> X </a>"""
 
     def wake_up(self):
         self.woodlamp.set_mode("WakeUp")
