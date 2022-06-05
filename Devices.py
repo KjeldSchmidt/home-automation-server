@@ -19,3 +19,7 @@ class Devices:
             "0x2c1165fffe8fa481",
         ],
     }
+    woodlamps = {
+        "bedLamp": "192.168.178.26",
+        "beamLamp": "192.168.178.48"
+    }

@@ -10,69 +10,42 @@ from Controller import Controller
 from TimeFunctions import parse_to_utc, local_time_today
 
 
-class Woodlamp(Controller):
-    def __init__(self, app: Flask, lamp_ip: str):
+class WoodlampCollection:
+    def __init__(
+            self,
+            lamp_config: dict[str, str],
+            app: Flask,
+    ):
         self.scheduler: APScheduler = Scheduler.scheduler
-        self.lamp_ip = lamp_ip
         self.next_sundown: str = "No sundown time set"
-        self.available_modes: List[str] = []
 
-        self.current_mode: str | None = None
+        self.lights = {}
+        for name, lamp_id in lamp_config.items():
+            self.lights[name] = Woodlamp(name, lamp_id)
 
-        self.setup(app)
-
-    def setup(self, app: Flask):
+        self.setup_routes(app)
         self.schedule_scheduling()
         self.schedule_irregular()
-        self.setup_routes(app)
-        self.fetch_available_modes()
+
+    def setup_routes(self, app: Flask):
+        @app.route("/woodlamp/<string:name>/mode/<string:mode>")
+        def set_mode(name: str, mode: str):
+            return self.lights[name].set_mode(mode)
 
     def produce_main_page_content(self):
-        def make_link(mode):
-            return f"<button onclick=\"fetch('/woodlamp/mode/{mode}')\">{mode}</button>"
-
-        if self.available_modes == []:
-            self.fetch_available_modes()
-
-        mode_links = [make_link(mode) for mode in self.available_modes]
-        modes_block = f'<div class="modes_block"> {"".join( mode_links )} </div>'
-        color_wheel_block = self.make_color_wheel_block()
-
         return f"""
-		Next sundown at: {self.next_sundown} </br>
-		Set color mode:	{modes_block} </br>
-		{color_wheel_block}
-		"""
+            Next sundown at: {self.next_sundown} 
+            </br>
+            {"<hr />".join([light.produce_main_page_content() for light in self.lights.values()])}
+        """
 
-    @staticmethod
-    def make_color_wheel_block():
-        return """
-		<div id="picker"></div>
-		<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
-		<script type="text/javascript">
-			var colorPicker = new iro.ColorPicker('#picker', {
-				layoutDirection: "horizontal"
-			});
-	
-			colorPicker.on('color:change', color => {
-				const colorString = "0x" + color.hexString.substring(1);
-				fetch( "/woodlamp/mode/SingleColor&color=" + colorString );
-			});
-		</script>
-		"""
+    def turn_off_all(self):
+        for light in self.lights.values():
+            light.set_mode("LightsOut")
 
-    def schedule_irregular(self) -> None:
-        self.schedule_sundown_lamp()
-
-    def fetch_available_modes(self) -> None:
-        try:
-            response = requests.get(f"http://{self.lamp_ip}/getModes")
-        except requests.exceptions.ConnectionError:
-            return
-
-        mode_names = response.text.split(",")
-        mode_names = [mode.strip() for mode in mode_names]
-        self.available_modes = mode_names
+    def turn_on_all(self):
+        for light in self.lights.values():
+            light.set_mode("CityAtSundown")
 
     def schedule_sundown_lamp(self) -> None:
         try:
@@ -89,8 +62,7 @@ class Woodlamp(Controller):
         self.next_sundown = local_time_today(twilight_start_utc)
         self.scheduler.add_job(
             "Turn on city lights",
-            self.set_mode,
-            args=["CityAtSundown"],
+            self.turn_on_all,
             next_run_time=twilight_start_utc,
         )
 
@@ -103,12 +75,60 @@ class Woodlamp(Controller):
             day="*",
         )
 
+    def schedule_irregular(self) -> None:
+        self.schedule_sundown_lamp()
+
+
+class Woodlamp(Controller):
+    def __init__(self, name: str, lamp_ip: str):
+        self.name = name
+        self.lamp_ip = lamp_ip
+        self.available_modes: List[str] = []
+
+        self.current_mode: str | None = None
+        self.fetch_available_modes()
+
+    def produce_main_page_content(self):
+        def make_link(mode):
+            return f"<button onclick=\"fetch('/woodlamp/{self.name}/mode/{mode}')\">{mode}</button>"
+
+        if not self.available_modes:
+            self.fetch_available_modes()
+
+        mode_links = [make_link(mode) for mode in self.available_modes]
+        modes_block = f'<div class="modes_block"> {"".join(mode_links)} </div>'
+        color_wheel_block = self.make_color_wheel_block()
+
+        return f"""
+        Set color mode:	{modes_block} </br>
+        {color_wheel_block}
+        """
+
+    def make_color_wheel_block(self):
+        return f"""
+        <div id="picker"></div>
+        <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+        <script type="text/javascript">
+            var colorPicker = new iro.ColorPicker('#picker', {{ layoutDirection: "horizontal" }});
+    
+            colorPicker.on('color:change', color => {{
+                const colorString = "0x" + color.hexString.substring(1);
+                fetch( "/woodlamp/{self.name}/mode/SingleColor&color=" + colorString );
+            }});
+        </script>
+        """
+
+    def fetch_available_modes(self) -> None:
+        try:
+            response = requests.get(f"http://{self.lamp_ip}/getModes")
+        except requests.exceptions.ConnectionError:
+            return
+
+        mode_names = response.text.split(",")
+        mode_names = [mode.strip() for mode in mode_names]
+        self.available_modes = mode_names
+
     def set_mode(self, mode: str) -> Tuple[str, int]:
         self.current_mode = mode
         response = requests.get(f"http://{self.lamp_ip}/setMode?newMode={mode}")
         return response.text, response.status_code
-
-    def setup_routes(self, app: Flask):
-        @app.route("/woodlamp/mode/<string:mode>")
-        def set_mode(mode: str):
-            return self.set_mode(mode)
