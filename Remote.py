@@ -2,6 +2,7 @@ import json
 
 from paho.mqtt.client import Client as MqttClient
 
+import Presets.Preset
 from ControllerCollection import ControllerCollection
 from util.ToggleList import ToggleList
 
@@ -18,6 +19,12 @@ class IkeaRemote:
         self.color_temperatures = ToggleList(["coolest", "neutral", "warmest"])
         self.brightness_increments = ToggleList([1, 64, 128, 192, 254])
         self.system_state = ToggleList([True, False])
+        self.presets = ToggleList([
+            Presets.Preset.Daylight,
+            Presets.Preset.EveningChillAlone,
+            Presets.Preset.EveningChillFriends,
+            Presets.Preset.Darkness,
+        ])
 
         self.lights_on: bool = False
 
@@ -26,6 +33,9 @@ class IkeaRemote:
             self.controllers.turn_off_all()
         else:
             self.controllers.turn_on_all()
+
+    def toggle_preset(self):
+        self.controllers.apply_preset(self.presets.next())
 
     def on_message(self):
         def on_message(client, userdata, msg):
@@ -39,7 +49,7 @@ class IkeaRemote:
 
             action = payload_dict["action"]
             action_map = {
-                "toggle": None,
+                "toggle": self.toggle_preset,
                 "toggle_hold": self.toggle_system_on_off,
                 "arrow_left_click": None,
                 "arrow_right_click": None,

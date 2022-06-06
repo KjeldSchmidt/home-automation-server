@@ -17,7 +17,7 @@ woodlamps = WoodlampCollection(Devices.woodlamps, app)
 alarm = Alarm(app, woodlamps.lights["bedLamp"])
 ceiling = CeilingLightsCollection(Devices.ceiling_lamps, app, mqtt_client)
 
-controllers = ControllerCollection([woodlamps, alarm, ceiling])
+controllers = ControllerCollection([woodlamps, alarm, ceiling], ceiling, woodlamps)
 remote = IkeaRemote(controllers, mqtt_client)
 
 
