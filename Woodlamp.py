@@ -1,4 +1,5 @@
 import json
+from threading import Thread
 from typing import Tuple, List
 
 import requests
@@ -41,11 +42,11 @@ class WoodlampCollection:
 
     def turn_off_all(self):
         for light in self.lights.values():
-            light.set_mode("LightsOut")
+            Thread(target=light.set_mode, args=("LightsOut", )).start()
 
     def turn_on_all(self):
         for light in self.lights.values():
-            light.set_mode("CityAtSundown")
+            Thread(target=light.set_mode, args=("CityAtSundown", )).start()
 
     def schedule_sundown_lamp(self) -> None:
         try:
@@ -130,5 +131,10 @@ class Woodlamp(Controller):
 
     def set_mode(self, mode: str) -> Tuple[str, int]:
         self.current_mode = mode
-        response = requests.get(f"http://{self.lamp_ip}/setMode?newMode={mode}")
-        return response.text, response.status_code
+        try:
+            response = requests.get(f"http://{self.lamp_ip}/setMode?newMode={mode}")
+            return response.text, response.status_code
+        except requests.exceptions.ConnectionError as e:
+            print(f"Setting mode on woodlamp {self.name} failed - Error trace:")
+            print(e)
+            return "Failed", 500
