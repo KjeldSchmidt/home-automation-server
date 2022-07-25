@@ -1,10 +1,10 @@
 from flask import Flask
 
 import MqttClient
-from Woodlamp import Woodlamp
+from Controller import Controller
 
 
-class CeilingLightsCollection:
+class CeilingLightsCollection(Controller):
     def __init__(
         self,
         lamp_config: dict[str, list[str]],

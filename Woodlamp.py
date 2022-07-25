@@ -11,7 +11,7 @@ from Controller import Controller
 from TimeFunctions import parse_to_utc, local_time_today
 
 
-class WoodlampCollection:
+class WoodlampCollection(Controller):
     def __init__(
             self,
             lamp_config: dict[str, str],
@@ -80,7 +80,7 @@ class WoodlampCollection:
         self.schedule_sundown_lamp()
 
 
-class Woodlamp(Controller):
+class Woodlamp:
     def __init__(self, name: str, lamp_ip: str):
         self.name = name
         self.lamp_ip = lamp_ip
