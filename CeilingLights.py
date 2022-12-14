@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 import MqttClient
 from Controller import Controller
@@ -29,9 +29,7 @@ class CeilingLightsCollection(Controller):
             return "Ok", 200
 
     def produce_main_page_content(self):
-        return "<hr />".join(
-            [light.produce_main_page_content() for light in self.lights.values()]
-        )
+        return render_template('ceiling_lights.html', lamps=self.lights )
 
     def turn_off_all(self):
         for light in self.lights.values():
@@ -47,19 +45,6 @@ class CeilingLights:
         self.mqtt_client = mqtt_client
         self.name = name
         self.lamp_ids = lamp_ids
-
-    def produce_main_page_content(self):
-        return f"""
-            <details>
-                <summary>
-                    <button onclick="fetch('ceiling/{self.name}/brightness/254')">On</button>
-                    <button onclick="fetch('ceiling/{self.name}/brightness/127')">Dim</button>
-                    <button onclick="fetch('ceiling/{self.name}/brightness/0')">Off</button>
-                </summary> 
-                <br /><input type=range min=250 max=454 onchange="fetch(`ceiling/{self.name}/temp/${{this.value}}`)" />
-                <br /><input type=range min=0 max=254 onchange="fetch(`ceiling/{self.name}/brightness/${{this.value}}`)" />
-            </details>
-        """
 
     def send_to_all_lamps(self, payload):
         for lamp_id in self.lamp_ids:
