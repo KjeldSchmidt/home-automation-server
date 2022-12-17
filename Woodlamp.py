@@ -109,9 +109,9 @@ class Woodlamp:
         return f"""
         <details>
             <summary>Color Wheel</summary>
-            <div id="picker"></div>
+            <div id="picker-{self.name}"></div>
             <script type="text/javascript">
-                var colorPicker = new iro.ColorPicker('#picker', {{ layoutDirection: "horizontal" }});
+                var colorPicker = new iro.ColorPicker('#picker-{self.name}', {{ layoutDirection: "horizontal" }});
         
                 colorPicker.on('color:change', color => {{
                     const colorString = "0x" + color.hexString.substring(1);
