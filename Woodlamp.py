@@ -35,8 +35,8 @@ class WoodlampCollection(Controller):
 
     def produce_main_page_content(self):
         return f"""
-            Next sundown at: {self.next_sundown} 
-            </br>
+            <div> Next sundown at: {self.next_sundown} </div>
+            <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
             {"<hr />".join([light.produce_main_page_content() for light in self.lights.values()])}
         """
 
@@ -101,22 +101,25 @@ class Woodlamp:
         color_wheel_block = self.make_color_wheel_block()
 
         return f"""
-        Set color mode:	{modes_block} </br>
+        <div> Set color mode: {modes_block} </div>
         {color_wheel_block}
         """
 
     def make_color_wheel_block(self):
         return f"""
-        <div id="picker"></div>
-        <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
-        <script type="text/javascript">
-            var colorPicker = new iro.ColorPicker('#picker', {{ layoutDirection: "horizontal" }});
-    
-            colorPicker.on('color:change', color => {{
-                const colorString = "0x" + color.hexString.substring(1);
-                fetch( "/woodlamp/{self.name}/mode/SingleColor&color=" + colorString );
-            }});
-        </script>
+        <details>
+            <summary>Color Wheel</summary>
+            <div id="picker"></div>
+            <script type="text/javascript">
+                var colorPicker = new iro.ColorPicker('#picker', {{ layoutDirection: "horizontal" }});
+        
+                colorPicker.on('color:change', color => {{
+                    const colorString = "0x" + color.hexString.substring(1);
+                    fetch( "/woodlamp/{self.name}/mode/SingleColor&color=" + colorString );
+                }});
+            </script>
+        </details>
+        
         """
 
     def fetch_available_modes(self) -> None:
