@@ -10,5 +10,3 @@ class Controller(ABC):
 
     def produce_main_page_content(self) -> str:
         return ""
-
-

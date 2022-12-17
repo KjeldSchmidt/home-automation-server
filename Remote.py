@@ -19,12 +19,14 @@ class IkeaRemote:
         self.color_temperatures = ToggleList(["coolest", "neutral", "warmest"])
         self.brightness_increments = ToggleList([1, 64, 128, 192, 254])
         self.system_state = ToggleList([True, False])
-        self.presets = ToggleList([
-            Presets.Preset.Daylight,
-            Presets.Preset.EveningChillAlone,
-            Presets.Preset.EveningChillFriends,
-            Presets.Preset.Darkness,
-        ])
+        self.presets = ToggleList(
+            [
+                Presets.Preset.Daylight,
+                Presets.Preset.EveningChillAlone,
+                Presets.Preset.EveningChillFriends,
+                Presets.Preset.Darkness,
+            ]
+        )
 
         self.lights_on: bool = False
 

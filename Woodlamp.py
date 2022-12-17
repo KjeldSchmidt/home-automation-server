@@ -13,9 +13,9 @@ from TimeFunctions import parse_to_utc, local_time_today
 
 class WoodlampCollection(Controller):
     def __init__(
-            self,
-            lamp_config: dict[str, str],
-            app: Flask,
+        self,
+        lamp_config: dict[str, str],
+        app: Flask,
     ):
         self.scheduler: APScheduler = Scheduler.scheduler
         self.next_sundown: str = "No sundown time set"
@@ -38,15 +38,17 @@ class WoodlampCollection(Controller):
             if not light.available_modes:
                 light.fetch_available_modes()
 
-        return render_template('led_strip_lamp.html', next_sundown=self.next_sundown, lights=self.lights)
+        return render_template(
+            "led_strip_lamp.html", next_sundown=self.next_sundown, lights=self.lights
+        )
 
     def turn_off_all(self):
         for light in self.lights.values():
-            Thread(target=light.set_mode, args=("LightsOut", )).start()
+            Thread(target=light.set_mode, args=("LightsOut",)).start()
 
     def turn_on_all(self):
         for light in self.lights.values():
-            Thread(target=light.set_mode, args=("CityAtSundown", )).start()
+            Thread(target=light.set_mode, args=("CityAtSundown",)).start()
 
     def schedule_sundown_lamp(self) -> None:
         try:

@@ -23,7 +23,7 @@ remote = IkeaRemote(controllers, mqtt_client)
 
 @app.route("/")
 def main_page():
-    return render_template('index.html', controllers=controllers)
+    return render_template("index.html", controllers=controllers)
 
 
 if __name__ == "__main__":

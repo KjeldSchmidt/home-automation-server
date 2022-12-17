@@ -5,7 +5,12 @@ from Woodlamp import WoodlampCollection
 
 
 class ControllerCollection:
-    def __init__(self, alarm: Alarm, ceiling_lights: CeilingLightsCollection, woodlamps: WoodlampCollection):
+    def __init__(
+        self,
+        alarm: Alarm,
+        ceiling_lights: CeilingLightsCollection,
+        woodlamps: WoodlampCollection,
+    ):
         self.controllers = [woodlamps, alarm, ceiling_lights]
         self.alarm = alarm
         self.ceiling_lights = ceiling_lights
