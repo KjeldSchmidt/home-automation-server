@@ -11,10 +11,8 @@ class ControllerCollection:
         self.ceiling_lights = ceiling_lights
         self.woodlamps = woodlamps
 
-    def produce_main_page_content(self):
-        return "<hr />".join(
-            [controller.produce_main_page_content() for controller in self.controllers]
-        )
+    def __iter__(self):
+        return self.controllers.__iter__()
 
     def turn_off_all(self):
         for controller in self.controllers:

@@ -1,2 +1,4 @@
 .idea/*
 venv
+wsl-venv
+__pycache__

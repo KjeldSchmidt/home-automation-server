@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 import MqttClient
 from Alarm import Alarm
@@ -23,7 +23,7 @@ remote = IkeaRemote(controllers, mqtt_client)
 
 @app.route("/")
 def main_page():
-    return controllers.produce_main_page_content()
+    return render_template('index.html', controllers=controllers)
 
 
 if __name__ == "__main__":

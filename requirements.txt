@@ -4,3 +4,9 @@ paho-mqtt~=1.5.1
 APScheduler~=3.7.0
 requests~=2.21.0
 pytz~=2021.1
+markupsafe==2.0.1
+
+# Dev dependencies
+pytest
+pytest-mock
+black

@@ -29,7 +29,7 @@ class CeilingLightsCollection(Controller):
             return "Ok", 200
 
     def produce_main_page_content(self):
-        return render_template('ceiling_lights.html', lamps=self.lights )
+        return render_template('ceiling_lights.html', lamps=self.lights)
 
     def turn_off_all(self):
         for light in self.lights.values():

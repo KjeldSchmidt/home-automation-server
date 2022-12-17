@@ -4,7 +4,11 @@ ssh_connect_string=pi@192.168.178.2
 
 ## sync: Uploads current code to the rasppi and restart the server service
 function task_sync {
-  rsync -r . "${ssh_connect_string}:~/home_automation"
+  rsync \
+    -r . \
+    --exclude 'venv' \
+    --exclude 'wsl-venv' \
+    "${ssh_connect_string}:~/home_automation"
   ssh "${ssh_connect_string}" 'sudo systemctl restart home-automation.service'
 }
 
