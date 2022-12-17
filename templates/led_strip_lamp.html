@@ -1,0 +1,26 @@
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+
+<div> Next sundown at: {{ next_sundown }} </div>
+
+{% for light in lights.values() %}
+    <br>
+    <div> {{ light.name }}:
+        <div class="modes_block">
+            {% for mode in light.available_modes %}
+                <button onclick="fetch('/woodlamp/{{ light.name }}/mode/{{ mode }}')">{{mode}}</button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <details>
+        <summary>Color Wheel</summary>
+        <div id="picker-{{ light.name }}"></div>
+        <script type="text/javascript">
+            var colorPicker = new iro.ColorPicker('#picker-{{ light.name }}', { layoutDirection: "horizontal" });
+            colorPicker.on('color:change', color => {
+                const colorString = "0x" + color.hexString.substring(1);
+                fetch( "/woodlamp/{{ light.name }}}/mode/SingleColor&color=" + colorString );
+            });
+        </script>
+    </details>
+{% endfor %}

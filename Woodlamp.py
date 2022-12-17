@@ -3,7 +3,7 @@ from threading import Thread
 from typing import Tuple, List
 
 import requests
-from flask import Flask
+from flask import Flask, render_template
 from flask_apscheduler import APScheduler
 
 import Scheduler
@@ -34,11 +34,11 @@ class WoodlampCollection(Controller):
             return self.lights[name].set_mode(mode)
 
     def produce_main_page_content(self):
-        return f"""
-            <div> Next sundown at: {self.next_sundown} </div>
-            <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
-            {"<hr />".join([light.produce_main_page_content() for light in self.lights.values()])}
-        """
+        for light in self.lights.values():
+            if not light.available_modes:
+                light.fetch_available_modes()
+
+        return render_template('led_strip_lamp.html', next_sundown=self.next_sundown, lights=self.lights)
 
     def turn_off_all(self):
         for light in self.lights.values():
@@ -88,39 +88,6 @@ class Woodlamp:
 
         self.current_mode: str | None = None
         self.fetch_available_modes()
-
-    def produce_main_page_content(self):
-        def make_link(mode):
-            return f"<button onclick=\"fetch('/woodlamp/{self.name}/mode/{mode}')\">{mode}</button>"
-
-        if not self.available_modes:
-            self.fetch_available_modes()
-
-        mode_links = [make_link(mode) for mode in self.available_modes]
-        modes_block = f'<div class="modes_block"> {"".join(mode_links)} </div>'
-        color_wheel_block = self.make_color_wheel_block()
-
-        return f"""
-        <div> Set color mode: {modes_block} </div>
-        {color_wheel_block}
-        """
-
-    def make_color_wheel_block(self):
-        return f"""
-        <details>
-            <summary>Color Wheel</summary>
-            <div id="picker-{self.name}"></div>
-            <script type="text/javascript">
-                var colorPicker = new iro.ColorPicker('#picker-{self.name}', {{ layoutDirection: "horizontal" }});
-        
-                colorPicker.on('color:change', color => {{
-                    const colorString = "0x" + color.hexString.substring(1);
-                    fetch( "/woodlamp/{self.name}/mode/SingleColor&color=" + colorString );
-                }});
-            </script>
-        </details>
-        
-        """
 
     def fetch_available_modes(self) -> None:
         try:
