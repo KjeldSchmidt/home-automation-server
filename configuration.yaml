@@ -1,0 +1,95 @@
+homeassistant: false
+permit_join: false
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost
+serial:
+  port: /dev/ttyAMA0
+  adapter: deconz
+advanced:
+  network_key:
+    - 1
+    - 161
+    - 246
+    - 212
+    - 59
+    - 252
+    - 76
+    - 34
+    - 200
+    - 205
+    - 30
+    - 181
+    - 230
+    - 39
+    - 139
+    - 66
+
+devices:
+  '0x680ae2fffe6a2ac5':
+    friendly_name: 'ceiling-hallway-0'
+  '0xbc33acfffe59a606':
+    friendly_name: 'ceiling-hallway-1'
+  '0x5c0272fffeb364e8':
+    friendly_name: 'ikea_remote'
+  '0x2c1165fffe8a6188':
+    friendly_name: 'ceiling-livingroom-0'
+  '0x2c1165fffe954329':
+    friendly_name: 'ceiling-livingroom-1'
+  '0x50325ffffeaef44e':
+    friendly_name: 'ceiling-livingroom-2'
+  '0x2c1165fffe9552aa':
+    friendly_name: 'ceiling-livingroom-3'
+  '0x2c1165fffe97a7ca':
+    friendly_name: 'ceiling-livingroom-4'
+  '0x2c1165fffe8f6498':
+    friendly_name: 'ceiling-livingroom-5'
+  '0x2c1165fffe875fb7':
+    friendly_name: 'ceiling-bedroom-0'
+  '0x50325ffffebc506f':
+    friendly_name: 'ceiling-bedroom-1'
+  '0x2c1165fffe2cb9bb':
+    friendly_name: 'ceiling-bedroom-2'
+  '0x2c1165fffe8fa481':
+    friendly_name: 'ceiling-bedroom-3'
+  '0x50325ffffebf9de2':
+    friendly_name: 'ceiling-bedroom-4'
+  '0x50325ffffed2342b':
+    friendly_name: 'ceiling-bedroom-5'
+  '0x0017880109bcecd0':
+    friendly_name: '0x0017880109bcecd0'
+  '0x588e81fffe323182':
+    friendly_name: '0x588e81fffe323182'
+
+groups:
+  '1':
+    friendly_name: 'ceiling-livingroom'
+    transition: 2
+    optimistic: false
+    devices:
+      - 'ceiling-livingroom-0'
+      - 'ceiling-livingroom-1'
+      - 'ceiling-livingroom-2'
+      - 'ceiling-livingroom-3'
+      - 'ceiling-livingroom-4'
+      - 'ceiling-livingroom-5'
+
+  '2':
+    friendly_name: 'ceiling-bedroom'
+    transition: 2
+    optimistic: false
+    devices:
+      - 'ceiling-bedroom-0'
+      - 'ceiling-bedroom-1'
+      - 'ceiling-bedroom-2'
+      - 'ceiling-bedroom-3'
+      - 'ceiling-bedroom-4'
+      - 'ceiling-bedroom-5'
+
+  '3':
+    friendly_name: 'ceiling-hallway'
+    transition: 2
+    optimistic: false
+    devices:
+      - 'ceiling-hallway-0'
+      - 'ceiling-hallway-1'
