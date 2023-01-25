@@ -9,7 +9,22 @@ function task_sync {
     --exclude 'venv' \
     --exclude 'wsl-venv' \
     "${ssh_connect_string}:~/home_automation"
+  ssh "${ssh_connect_string}" 'mv home_automation/configuration.yaml /opt/zigbee2mqtt/data/configuration.yaml'
+
+  ssh "${ssh_connect_string}" 'sudo systemctl restart zigbee2mqtt.service'
   ssh "${ssh_connect_string}" 'sudo systemctl restart home-automation.service'
+}
+
+## fmt: Apply autoformatting
+function task_fmt {
+  source wsl-venv/bin/activate
+  black .
+}
+
+## mypy: Check types
+function task_mypy {
+  source wsl-venv/bin/activate
+  mypy .
 }
 
 #-------- All task definitions go above this line --------#

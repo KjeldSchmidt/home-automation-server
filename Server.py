@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 
-import MqttClient
+from MqttClient import MqttClient
 from Alarm import Alarm
 from CeilingLights import CeilingLightsCollection
 from ControllerCollection import ControllerCollection
@@ -11,7 +11,7 @@ from Devices import Devices
 
 app = Flask(__name__)
 make_scheduler(app)
-mqtt_client: MqttClient.Client = MqttClient.get_client()
+mqtt_client: MqttClient = MqttClient()
 
 woodlamps = WoodlampCollection(Devices.woodlamps, app)
 alarm = Alarm(app, woodlamps.lights["bedLamp"])

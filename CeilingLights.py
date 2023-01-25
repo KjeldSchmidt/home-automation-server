@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 
-import MqttClient
+from MqttClient import MqttClient
 from Controller import Controller
 
 
@@ -9,7 +9,7 @@ class CeilingLightsCollection(Controller):
         self,
         lamp_config: dict[str, list[str]],
         app: Flask,
-        mqtt_client: MqttClient.Client,
+        mqtt_client: MqttClient,
     ):
         self.lights = {}
         for name, lamp_ids in lamp_config.items():
@@ -41,7 +41,7 @@ class CeilingLightsCollection(Controller):
 
 
 class CeilingLights:
-    def __init__(self, name: str, lamp_ids: list[str], mqtt_client: MqttClient.Client):
+    def __init__(self, name: str, lamp_ids: list[str], mqtt_client: MqttClient):
         self.mqtt_client = mqtt_client
         self.name = name
         self.lamp_ids = lamp_ids
