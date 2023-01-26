@@ -6,6 +6,7 @@ from CeilingLights import CeilingLightsCollection
 from ControllerCollection import ControllerCollection
 from Remote import IkeaRemote
 from Scheduler import make_scheduler
+from Spotify import Spotify
 from Woodlamp import WoodlampCollection
 from Devices import Devices
 
@@ -16,6 +17,7 @@ mqtt_client: MqttClient = MqttClient()
 woodlamps = WoodlampCollection(Devices.woodlamps, app)
 alarm = Alarm(app, woodlamps.lights["bedLamp"])
 ceiling = CeilingLightsCollection(Devices.ceiling_lamps, app, mqtt_client)
+spotify = Spotify(app)
 
 controllers = ControllerCollection(alarm, ceiling, woodlamps)
 remote = IkeaRemote(controllers, mqtt_client)

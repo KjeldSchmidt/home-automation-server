@@ -2,3 +2,4 @@
 venv
 wsl-venv
 __pycache__
+env.py
