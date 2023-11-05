@@ -10,3 +10,4 @@ markupsafe==2.0.1
 pytest
 pytest-mock
 black
+mypy

@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 
+from GlobalState import GlobalState
 from MqttClient import MqttClient
 from Alarm import Alarm
 from CeilingLights import CeilingLightsCollection
@@ -14,12 +15,13 @@ app = Flask(__name__)
 make_scheduler(app)
 mqtt_client: MqttClient = MqttClient()
 
-woodlamps = WoodlampCollection(Devices.woodlamps, app)
+global_state = GlobalState(app)
+woodlamps = WoodlampCollection(Devices.woodlamps, app, global_state)
 alarm = Alarm(app, woodlamps.lights["bedLamp"])
 ceiling = CeilingLightsCollection(Devices.ceiling_lamps, app, mqtt_client)
 spotify = Spotify(app)
 
-controllers = ControllerCollection(alarm, ceiling, woodlamps)
+controllers = ControllerCollection(alarm, ceiling, woodlamps, global_state)
 remote = IkeaRemote(controllers, mqtt_client)
 
 

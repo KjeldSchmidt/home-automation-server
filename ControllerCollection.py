@@ -1,5 +1,6 @@
 from Alarm import Alarm
 from CeilingLights import CeilingLightsCollection
+from GlobalState import GlobalState
 from Presets.Preset import Preset
 from Woodlamp import WoodlampCollection
 
@@ -10,11 +11,13 @@ class ControllerCollection:
         alarm: Alarm,
         ceiling_lights: CeilingLightsCollection,
         woodlamps: WoodlampCollection,
+        global_state: GlobalState,
     ):
-        self.controllers = [woodlamps, alarm, ceiling_lights]
+        self.controllers = [woodlamps, alarm, ceiling_lights, global_state]
         self.alarm = alarm
         self.ceiling_lights = ceiling_lights
         self.woodlamps = woodlamps
+        self.global_state = global_state
 
     def __iter__(self):
         return self.controllers.__iter__()

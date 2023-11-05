@@ -8,21 +8,20 @@ from flask_apscheduler import APScheduler
 
 import Scheduler
 from Controller import Controller
+from GlobalState import GlobalState
 from TimeFunctions import parse_to_utc, local_time_today
 
 
 class WoodlampCollection(Controller):
     def __init__(
-        self,
-        lamp_config: dict[str, str],
-        app: Flask,
+        self, lamp_config: dict[str, str], app: Flask, global_state: GlobalState
     ):
         self.scheduler: APScheduler = Scheduler.scheduler
         self.next_sundown: str = "No sundown time set"
 
         self.lights = {}
         for name, lamp_id in lamp_config.items():
-            self.lights[name] = Woodlamp(name, lamp_id)
+            self.lights[name] = Woodlamp(name, lamp_id, global_state)
 
         self.setup_routes(app)
         self.schedule_scheduling()
@@ -30,7 +29,7 @@ class WoodlampCollection(Controller):
 
     def setup_routes(self, app: Flask):
         @app.route("/woodlamp/<string:name>/mode/<string:mode>")
-        def set_mode(name: str, mode: str):
+        def set_mode(name: str, mode: str) -> Tuple[str, int]:
             return self.lights[name].set_mode(mode)
 
     def produce_main_page_content(self):
@@ -83,9 +82,10 @@ class WoodlampCollection(Controller):
 
 
 class Woodlamp:
-    def __init__(self, name: str, lamp_ip: str):
+    def __init__(self, name: str, lamp_ip: str, global_state: GlobalState):
         self.name = name
         self.lamp_ip = lamp_ip
+        self.global_state = global_state
         self.available_modes: List[str] = []
 
         self.current_mode: str | None = None
@@ -104,7 +104,10 @@ class Woodlamp:
     def set_mode(self, mode: str) -> Tuple[str, int]:
         self.current_mode = mode
         try:
-            response = requests.get(f"http://{self.lamp_ip}/setMode?newMode={mode}")
+            if self.global_state.turned_on:
+                response = requests.get(f"http://{self.lamp_ip}/setMode?newMode={mode}")
+            else:
+                return "System is turned off, request is ignored.", 200
             return response.text, response.status_code
         except requests.exceptions.ConnectionError as e:
             print(f"Setting mode on woodlamp {self.name} failed - Error trace:")
