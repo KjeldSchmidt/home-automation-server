@@ -17,14 +17,29 @@ function task_sync {
 
 ## fmt: Apply autoformatting
 function task_fmt {
-  source wsl-venv/bin/activate
+  activate_venv
   black .
 }
 
 ## mypy: Check types
 function task_mypy {
-  source wsl-venv/bin/activate
+  activate_venv
   mypy .
+}
+
+## setup-python-env: Installs the python runtime and dependencies.
+function task_setup_python_env {
+  python3.9 -m venv venv
+  activate_venv
+  pip install --upgrade pip setuptools
+  pip install -r requirements.txt
+}
+
+function activate_venv {
+  local root
+  root=$(git rev-parse --show-toplevel)
+  cd $root || exit
+  source "venv/bin/activate"
 }
 
 #-------- All task definitions go above this line --------#
