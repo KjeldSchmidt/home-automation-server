@@ -9,7 +9,7 @@ function task_sync {
     --exclude 'venv' \
     --exclude 'wsl-venv' \
     "${ssh_connect_string}:~/home_automation"
-  ssh "${ssh_connect_string}" 'mv home_automation/configuration.yaml /opt/zigbee2mqtt/data/configuration.yaml'
+  ssh "${ssh_connect_string}" 'mv ~/home_automation/configuration.yaml /opt/zigbee2mqtt/data/configuration.yaml'
 
   ssh "${ssh_connect_string}" 'sudo systemctl restart zigbee2mqtt.service'
   ssh "${ssh_connect_string}" 'sudo systemctl restart home-automation.service'
@@ -29,7 +29,7 @@ function task_mypy {
 
 ## setup-python-env: Installs the python runtime and dependencies.
 function task_setup_python_env {
-  python3.9 -m venv venv
+  python3.10 -m venv venv
   activate_venv
   pip install --upgrade pip setuptools
   pip install -r requirements.txt
