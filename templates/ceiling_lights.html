@@ -4,6 +4,7 @@
             <button onclick="fetch('ceiling/{{lamp_name}}/brightness/254')">On</button>
             <button onclick="fetch('ceiling/{{lamp_name}}/brightness/127')">Dim</button>
             <button onclick="fetch('ceiling/{{lamp_name}}/brightness/0')">Off</button>
+            <button onclick="fetch('ceiling/{{lamp_name}}/toggle')">Toggle</button>
         </summary>
         <br /><input type=range min=250 max=454 onchange="fetch(`ceiling/{{lamp_name}}/temp/${this.value}`)" />
         <br /><input type=range min=0 max=254 onchange="fetch(`ceiling/{{lamp_name}}/brightness/${this.value}`)" />

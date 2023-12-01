@@ -1,3 +1,5 @@
+from enum import Enum, auto
+
 from flask import Flask, render_template
 
 from MqttClient import MqttClient
@@ -28,6 +30,11 @@ class CeilingLightsCollection(Controller):
             self.lights[name].set_color_temp_all(color_temp)
             return "Ok", 200
 
+        @app.route(f"/ceiling/<string:name>/toggle")
+        def ceiling_lights_toggle(name: str):
+            self.lights[name].toggle()
+            return "Ok", 200
+
     def produce_main_page_content(self):
         return render_template("ceiling_lights.html", lamps=self.lights)
 
@@ -40,11 +47,25 @@ class CeilingLightsCollection(Controller):
             light.set_brightness_all(127)
 
 
+class LampState(Enum):
+    ON = auto()
+    HALF = auto()
+    OFF = auto()
+
+    def next(self):
+        return {
+            LampState.ON: LampState.HALF,
+            LampState.HALF: LampState.OFF,
+            LampState.OFF: LampState.ON,
+        }[self]
+
+
 class CeilingLights:
     def __init__(self, name: str, lamp_ids: list[str], mqtt_client: MqttClient):
         self.mqtt_client = mqtt_client
         self.name = name
         self.lamp_ids = lamp_ids
+        self.state: LampState = LampState.OFF
 
     def send_to_all_lamps(self, payload):
         for lamp_id in self.lamp_ids:
@@ -57,3 +78,12 @@ class CeilingLights:
 
     def set_color_temp_all(self, color_temp: int):
         self.send_to_all_lamps(f'{{ "color_temp": "{color_temp}" }}')
+
+    def toggle(self):
+        self.state = self.state.next()
+        brightness_map = {
+            LampState.ON: 255,
+            LampState.HALF: 127,
+            LampState.OFF: 0,
+        }
+        self.set_brightness_all(brightness_map[self.state])

@@ -1,4 +1,5 @@
 import json
+from enum import Enum, auto
 from threading import Thread
 from typing import Tuple, List
 
@@ -31,6 +32,11 @@ class WoodlampCollection(Controller):
         @app.route("/woodlamp/<string:name>/mode/<string:mode>")
         def set_mode(name: str, mode: str) -> Tuple[str, int]:
             return self.lights[name].set_mode(mode)
+
+        @app.route("/woodlamp/<string:name>/toggle")
+        def toggle_mode(name: str):
+            self.lights[name].toggle()
+            return "Accepted", 202
 
     def produce_main_page_content(self):
         for light in self.lights.values():
@@ -81,6 +87,19 @@ class WoodlampCollection(Controller):
         self.schedule_sundown_lamp()
 
 
+class WoodLampState(Enum):
+    CityAtSundown = "CityAtSundown"
+    Pacifica = "Pacifica"
+    LightsOut = "LightsOut"
+
+    def next(self):
+        return {
+            WoodLampState.CityAtSundown: WoodLampState.Pacifica,
+            WoodLampState.Pacifica: WoodLampState.LightsOut,
+            WoodLampState.LightsOut: WoodLampState.CityAtSundown,
+        }[self]
+
+
 class Woodlamp:
     def __init__(self, name: str, lamp_ip: str, global_state: GlobalState):
         self.name = name
@@ -88,7 +107,8 @@ class Woodlamp:
         self.global_state = global_state
         self.available_modes: List[str] = []
 
-        self.current_mode: str | None = None
+        self.state: WoodLampState = WoodLampState.LightsOut
+
         self.fetch_available_modes()
 
     def fetch_available_modes(self) -> None:
@@ -102,7 +122,6 @@ class Woodlamp:
         self.available_modes = mode_names
 
     def set_mode(self, mode: str) -> Tuple[str, int]:
-        self.current_mode = mode
         try:
             if self.global_state.turned_on:
                 response = requests.get(f"http://{self.lamp_ip}/setMode?newMode={mode}")
@@ -113,3 +132,7 @@ class Woodlamp:
             print(f"Setting mode on woodlamp {self.name} failed - Error trace:")
             print(e)
             return "Failed", 500
+
+    def toggle(self):
+        self.state = self.state.next()
+        self.set_mode(self.state.value)
