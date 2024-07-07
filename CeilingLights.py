@@ -48,16 +48,25 @@ class CeilingLightsCollection(Controller):
 
 
 class LampState(Enum):
-    ON = auto()
-    HALF = auto()
-    OFF = auto()
+    ON = 255
+    HALF = 127
+    OFF = 0
 
-    def next(self):
+    def next(self) -> "LampState":
         return {
             LampState.ON: LampState.HALF,
             LampState.HALF: LampState.OFF,
             LampState.OFF: LampState.ON,
         }[self]
+
+    @staticmethod
+    def get_closest(brightness: int) -> "LampState":
+        if brightness == 0:
+            return LampState.OFF
+        if brightness < 159:
+            return LampState.HALF
+        else:
+            return LampState.ON
 
 
 class CeilingLights:
@@ -74,6 +83,7 @@ class CeilingLights:
             )
 
     def set_brightness_all(self, brightness: int):
+        self.state = LampState.get_closest(brightness)
         self.send_to_all_lamps(f'{{ "brightness": "{brightness}" }}')
 
     def set_color_temp_all(self, color_temp: int):
@@ -81,9 +91,4 @@ class CeilingLights:
 
     def toggle(self):
         self.state = self.state.next()
-        brightness_map = {
-            LampState.ON: 255,
-            LampState.HALF: 127,
-            LampState.OFF: 0,
-        }
-        self.set_brightness_all(brightness_map[self.state])
+        self.set_brightness_all(self.state.value)
