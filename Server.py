@@ -21,7 +21,7 @@ alarm = Alarm(app, woodlamps.lights["bedLamp"])
 ceiling = CeilingLightsCollection(Devices.ceiling_lamps, app, mqtt_client)
 spotify = Spotify(app)
 
-controllers = ControllerCollection(alarm, ceiling, woodlamps, global_state)
+controllers = ControllerCollection(alarm, ceiling, woodlamps, global_state, spotify)
 remote = IkeaRemote(controllers, mqtt_client)
 
 

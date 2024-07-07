@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
 import requests
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template
 from Controller import Controller
 import env
 
@@ -37,10 +37,7 @@ class Spotify(Controller):
         @app.route("/spotify/next")
         def next_song():
             self.ensure_token_is_fresh()
-            headers = {
-                "Authorization": f"Bearer {self.token}",
-                "Content-Type": "application/json",
-            }
+            headers = {"Authorization": f"Bearer {self.token}"}
             response = requests.post(
                 "https://api.spotify.com/v1/me/player/next", headers=headers
             )
@@ -49,10 +46,7 @@ class Spotify(Controller):
         @app.route("/spotify/previous")
         def previous_song():
             self.ensure_token_is_fresh()
-            headers = {
-                "Authorization": f"Bearer {self.token}",
-                "Content-Type": "application/json",
-            }
+            headers = {"Authorization": f"Bearer {self.token}"}
             response = requests.post(
                 "https://api.spotify.com/v1/me/player/previous", headers=headers
             )
@@ -66,7 +60,7 @@ class Spotify(Controller):
                 "Content-Type": "application/json",
             }
             requests.put(
-                "https://api.spotify.com/v1/me/player/shuffle/?state=true",
+                "https://api.spotify.com/v1/me/player/shuffle?state=true",
                 headers=headers,
             )
             response = requests.put(
@@ -84,7 +78,7 @@ class Spotify(Controller):
                 "Content-Type": "application/json",
             }
             requests.put(
-                "https://api.spotify.com/v1/me/player/shuffle/?state=false",
+                "https://api.spotify.com/v1/me/player/shuffle?state=false",
                 headers=headers,
             )
             response = requests.put(
@@ -179,3 +173,6 @@ class Spotify(Controller):
             response_body=refresh_response.text,
         )
         return response
+
+    def produce_main_page_content(self) -> str:
+        return render_template("spotify.html")

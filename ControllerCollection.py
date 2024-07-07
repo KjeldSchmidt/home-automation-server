@@ -2,6 +2,7 @@ from Alarm import Alarm
 from CeilingLights import CeilingLightsCollection
 from GlobalState import GlobalState
 from Presets.Preset import Preset
+from Spotify import Spotify
 from Woodlamp import WoodlampCollection
 
 
@@ -12,8 +13,9 @@ class ControllerCollection:
         ceiling_lights: CeilingLightsCollection,
         woodlamps: WoodlampCollection,
         global_state: GlobalState,
+        spotify: Spotify,
     ):
-        self.controllers = [woodlamps, alarm, ceiling_lights, global_state]
+        self.controllers = [woodlamps, alarm, ceiling_lights, global_state, spotify]
         self.alarm = alarm
         self.ceiling_lights = ceiling_lights
         self.woodlamps = woodlamps
