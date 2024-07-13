@@ -19,7 +19,7 @@
             var colorPicker = new iro.ColorPicker('#picker-{{ light.name }}', { layoutDirection: "horizontal" });
             colorPicker.on('color:change', color => {
                 const colorString = "0x" + color.hexString.substring(1);
-                fetch( "/woodlamp/{{ light.name }}}/mode/SingleColor&color=" + colorString );
+                fetch( "/woodlamp/{{ light.name }}/mode/SingleColor&color=" + colorString );
             });
         </script>
     </details>
