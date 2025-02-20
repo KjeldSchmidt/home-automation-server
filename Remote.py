@@ -1,6 +1,6 @@
 import json
 
-from MqttClient import MqttClient
+from MqttHandler import MqttHandler
 
 import Presets.Preset
 from ControllerCollection import ControllerCollection
@@ -11,11 +11,11 @@ class IkeaRemote:
     def __init__(
         self,
         controllers: ControllerCollection,
-        mqtt_client: MqttClient,
+        mqtt_handler: MqttHandler,
     ):
         self.controllers: ControllerCollection = controllers
-        self.mqtt_client: MqttClient = mqtt_client
-        self.mqtt_client.add_message_handler(self.on_message())
+        self.mqtt_handler: MqttHandler = mqtt_handler
+        self.mqtt_handler.add_message_handler(self.on_message())
         self.color_temperatures = ToggleList(["coolest", "neutral", "warmest"])
         self.brightness_increments = ToggleList([1, 64, 128, 192, 254])
         self.system_state = ToggleList([True, False])

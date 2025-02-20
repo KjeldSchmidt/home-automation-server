@@ -2,7 +2,7 @@ from enum import Enum, auto
 
 from flask import Flask, render_template
 
-from MqttClient import MqttClient
+from MqttHandler import MqttHandler
 from Controller import Controller
 
 
@@ -11,11 +11,11 @@ class CeilingLightsCollection(Controller):
         self,
         lamp_config: dict[str, list[str]],
         app: Flask,
-        mqtt_client: MqttClient,
+        mqtt_handler: MqttHandler,
     ):
         self.lights = {}
         for name, lamp_ids in lamp_config.items():
-            self.lights[name] = CeilingLights(name, lamp_ids, mqtt_client)
+            self.lights[name] = CeilingLights(name, lamp_ids, mqtt_handler)
 
         self.setup_routes(app)
 
@@ -70,15 +70,15 @@ class LampState(Enum):
 
 
 class CeilingLights:
-    def __init__(self, name: str, lamp_ids: list[str], mqtt_client: MqttClient):
-        self.mqtt_client = mqtt_client
+    def __init__(self, name: str, lamp_ids: list[str], mqtt_handler: MqttHandler):
+        self.mqtt_handler = mqtt_handler
         self.name = name
         self.lamp_ids = lamp_ids
         self.state: LampState = LampState.OFF
 
     def send_to_all_lamps(self, payload):
         for lamp_id in self.lamp_ids:
-            self.mqtt_client.publish(
+            self.mqtt_handler.publish(
                 topic=f"zigbee2mqtt/{lamp_id}/set", payload=payload
             )
 
