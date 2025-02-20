@@ -8,7 +8,7 @@ Message: TypeAlias = mqtt.MQTTMessage
 
 class MqttClient:
     def __init__(self) -> None:
-        client = mqtt.Client("HomeAutomationServer", clean_session=False)
+        client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, "HomeAutomationServer", clean_session=False)
         client.on_connect = self._on_connect()
         client.on_disconnect = self._on_disconnect()
         client.on_message = self._on_message()
