@@ -27,12 +27,13 @@ function task_mypy {
   mypy .
 }
 
-## setup-python-env: Installs the python runtime and dependencies.
-function task_setup_python_env {
+## setup: Installs the python runtime and dependencies.
+function task_setup {
+  sudo apt-get install mosquitto
   python3.10 -m venv venv
   activate_venv
   pip install --upgrade pip setuptools
-  pip install -r requirements.txt
+  pip install -r requirements-freeze.txt
 }
 
 function activate_venv {
