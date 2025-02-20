@@ -29,7 +29,9 @@ function task_mypy {
 
 ## setup: Installs the python runtime and dependencies.
 function task_setup {
-  sudo apt-get install mosquitto
+  sudo add-apt-repository ppa:deadsnakes/ppa
+  sudo apt update
+  sudo apt-get install mosquitto python3.10 python3.10-venv
   python3.10 -m venv venv
   activate_venv
   pip install --upgrade pip setuptools
