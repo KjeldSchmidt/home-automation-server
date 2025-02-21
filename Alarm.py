@@ -16,7 +16,7 @@ class Alarm(Controller):
         self.woodlamp = woodlamp
         self.setup_routes(app)
 
-    def produce_main_page_content(self):
+    def get_frontend_html(self):
         alarms = [
             job for job in self.scheduler.get_jobs() if job.id.startswith("alarm::")
         ]

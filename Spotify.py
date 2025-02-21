@@ -174,5 +174,5 @@ class Spotify(Controller):
         )
         return response
 
-    def produce_main_page_content(self) -> str:
+    def get_frontend_html(self) -> str:
         return render_template("spotify.html")

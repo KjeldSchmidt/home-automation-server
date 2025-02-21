@@ -38,7 +38,7 @@ class WoodlampCollection(Controller):
             self.lights[name].toggle()
             return "Accepted", 202
 
-    def produce_main_page_content(self):
+    def get_frontend_html(self):
         for light in self.lights.values():
             if not light.available_modes:
                 light.fetch_available_modes()

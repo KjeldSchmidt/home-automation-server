@@ -25,5 +25,5 @@ class GlobalState(Controller):
     def turn_on_all(self):
         self.turned_on = True
 
-    def produce_main_page_content(self) -> str:
+    def get_frontend_html(self) -> str:
         return render_template("global_state.html", turned_on=self.turned_on)

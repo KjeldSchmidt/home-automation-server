@@ -35,7 +35,7 @@ class CeilingLightsCollection(Controller):
             self.lights[name].toggle()
             return "Ok", 200
 
-    def produce_main_page_content(self):
+    def get_frontend_html(self):
         return render_template("ceiling_lights.html", lamps=self.lights)
 
     def turn_off_all(self):
