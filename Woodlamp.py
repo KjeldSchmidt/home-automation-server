@@ -123,7 +123,7 @@ class Woodlamp:
 
     def set_mode(self, mode: str) -> Tuple[str, int]:
         try:
-            if self.global_state.turned_on:
+            if self.global_state.is_turned_on:
                 response = requests.get(f"http://{self.lamp_ip}/setMode?newMode={mode}")
             else:
                 return "System is turned off, request is ignored.", 200
