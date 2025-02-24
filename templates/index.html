@@ -34,7 +34,7 @@
     <title>HomeControl</title>
 </head>
 {% for controller in controllers %}
-    {{ controller.produce_main_page_content()|safe }}
+    {{ controller.get_frontend_html()|safe }}
     <hr>
 {% endfor %}
 </html>
