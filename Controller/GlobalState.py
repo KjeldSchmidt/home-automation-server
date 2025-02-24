@@ -9,8 +9,15 @@ class GlobalState(Controller):
         self.setup_routes(app)
 
     def setup_routes(self, app: Flask):
-        @app.route("/global_state/is_turned_on/<bool:state_to_set>")
-        def set_turned_on(state_to_set: bool):
+        @app.route("/global_state/is_turned_on/<string:state_to_set>")
+        def set_turned_on(state_to_set: str):
+            # Todo: Introduce a converter, I guess, or find out if there is one... or just switch to FastAPI already.
+            if state_to_set == "true":
+                state_to_set = True
+            elif state_to_set == "false":
+                state_to_set = False
+            else:
+                return "Truth value needs to be either 'true' or 'false'", 400
             self.turn_on_all() if state_to_set else self.turn_off_all()
             return redirect("/")
 
