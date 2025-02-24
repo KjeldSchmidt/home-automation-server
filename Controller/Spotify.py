@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 
 import requests
 from flask import Flask, request, redirect, render_template
-from Controller import Controller
+from Controller.Controller import Controller
 import env
 
 

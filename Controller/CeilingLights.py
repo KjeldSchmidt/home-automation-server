@@ -3,7 +3,7 @@ from enum import Enum, auto
 from flask import Flask, render_template
 
 from MqttHandler import MqttHandler
-from Controller import Controller
+from Controller.Controller import Controller
 
 
 class CeilingLightsCollection(Controller):

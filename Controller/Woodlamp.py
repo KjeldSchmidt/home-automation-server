@@ -8,8 +8,8 @@ from flask import Flask, render_template
 from flask_apscheduler import APScheduler
 
 import Scheduler
-from Controller import Controller
-from GlobalState import GlobalState
+from Controller.Controller import Controller
+from Controller.GlobalState import GlobalState
 from TimeFunctions import parse_to_utc, local_time_today
 
 

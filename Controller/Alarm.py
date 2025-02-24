@@ -5,9 +5,11 @@ from flask import Flask, request, redirect
 from flask_apscheduler import APScheduler
 
 import Scheduler
-from Controller import Controller
+from Controller.Controller import Controller
+from Controller.Woodlamp import Woodlamp
 from TimeFunctions import get_next_valid_time, local_time_today
-from Woodlamp import Woodlamp
+
+
 
 
 class Alarm(Controller):

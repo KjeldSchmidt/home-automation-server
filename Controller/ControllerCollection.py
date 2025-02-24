@@ -1,9 +1,9 @@
-from Alarm import Alarm
-from CeilingLights import CeilingLightsCollection
-from GlobalState import GlobalState
+from Controller.Alarm import Alarm
+from Controller.CeilingLights import CeilingLightsCollection
+from Controller.GlobalState import GlobalState
+from Controller.Spotify import Spotify
+from Controller.Woodlamp import WoodlampCollection
 from Presets.Preset import Preset
-from Spotify import Spotify
-from Woodlamp import WoodlampCollection
 
 
 class ControllerCollection:
