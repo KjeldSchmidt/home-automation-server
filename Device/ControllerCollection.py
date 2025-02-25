@@ -1,8 +1,8 @@
-from Controller.Alarm import Alarm
-from Controller.CeilingLights import CeilingLightsCollection
-from Controller.GlobalState import GlobalState
-from Controller.Spotify import Spotify
-from Controller.Woodlamp import WoodlampCollection
+from Alarm import Alarm
+from Device.CeilingLights import CeilingLightsCollection
+from Device.GlobalState import GlobalState
+from Device.Spotify import Spotify
+from Device.Woodlamp import WoodlampCollection
 from Presets.Preset import Preset
 
 

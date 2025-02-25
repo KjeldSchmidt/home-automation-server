@@ -3,7 +3,7 @@ import json
 from MqttHandler import MqttHandler
 
 import Presets.Preset
-from Controller.ControllerCollection import ControllerCollection
+from Device.ControllerCollection import ControllerCollection
 from util.ToggleList import ToggleList
 
 

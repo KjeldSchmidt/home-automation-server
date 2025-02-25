@@ -1,14 +1,14 @@
 from flask import Flask, render_template
 
-from Controller.GlobalState import GlobalState
+from Device.GlobalState import GlobalState
 from MqttHandler import MqttHandler
-from Controller.Alarm import Alarm
-from Controller.CeilingLights import CeilingLightsCollection
-from Controller.ControllerCollection import ControllerCollection
+from Alarm import Alarm
+from Device.CeilingLights import CeilingLightsCollection
+from Device.ControllerCollection import ControllerCollection
 from Remote import IkeaRemote
 from Scheduler import make_scheduler
-from Controller.Spotify import Spotify
-from Controller.Woodlamp import WoodlampCollection
+from Device.Spotify import Spotify
+from Device.Woodlamp import WoodlampCollection
 from Devices import Devices
 
 app = Flask(__name__)

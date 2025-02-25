@@ -3,10 +3,10 @@ from enum import Enum, auto
 from flask import Flask, render_template
 
 from MqttHandler import MqttHandler
-from Controller.Controller import Controller
+from Device.Device import Device
 
 
-class CeilingLightsCollection(Controller):
+class CeilingLightsCollection(Device):
     def __init__(
         self,
         lamp_config: dict[str, list[str]],

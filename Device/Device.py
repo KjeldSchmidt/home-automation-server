@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class Controller(ABC):
+class Device(ABC):
     def turn_off_all(self):
         pass
 

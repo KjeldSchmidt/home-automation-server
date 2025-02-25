@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 
 import requests
 from flask import Flask, request, redirect, render_template
-from Controller.Controller import Controller
+from Device.Device import Device
 import env
 
 
@@ -22,7 +22,7 @@ class AuthorisationResponse:
         self.expiry_datetime = now + timedelta(seconds=self.expires_in - 60)
 
 
-class Spotify(Controller):
+class Spotify(Device):
     API_URL = "https://api.spotify.com/api"
     AUTH_URL = "https://accounts.spotify.com"
     REDIRECT_URI = "http://192.168.178.2:5000/spotify/login/callback"

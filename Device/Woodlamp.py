@@ -8,12 +8,12 @@ from flask import Flask, render_template
 from flask_apscheduler import APScheduler
 
 import Scheduler
-from Controller.Controller import Controller
-from Controller.GlobalState import GlobalState
+from Device.Device import Device
+from Device.GlobalState import GlobalState
 from TimeFunctions import parse_to_utc, local_time_today
 
 
-class WoodlampCollection(Controller):
+class WoodlampCollection(Device):
     def __init__(
         self, lamp_config: dict[str, str], app: Flask, global_state: GlobalState
     ):
@@ -76,7 +76,7 @@ class WoodlampCollection(Controller):
 
     def schedule_scheduling(self) -> None:
         self.scheduler.add_job(
-            "Schedule Wood Lamp Controller",
+            "Schedule Wood Lamp Device",
             self.schedule_irregular,
             trigger="cron",
             hour=3,

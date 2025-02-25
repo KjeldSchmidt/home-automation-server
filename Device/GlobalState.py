@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect
 
-from Controller.Controller import Controller
+from Device.Device import Device
 
 
-class GlobalState(Controller):
+class GlobalState(Device):
     def __init__(self, app: Flask):
         self.is_turned_on = True
         self.setup_routes(app)
