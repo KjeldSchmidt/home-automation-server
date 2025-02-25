@@ -27,6 +27,12 @@ function task_mypy {
   mypy .
 }
 
+## test: runs all local tests
+function task_test {
+  activate_venv
+  pytest .
+}
+
 ## setup: Installs the python runtime and dependencies.
 function task_setup {
   sudo add-apt-repository ppa:deadsnakes/ppa -y
