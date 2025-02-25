@@ -8,7 +8,7 @@ from Device.ControllerCollection import ControllerCollection
 from Remote import IkeaRemote
 from Scheduler import make_scheduler
 from Device.Spotify import Spotify
-from Device.Woodlamp import WoodlampCollection
+from Device.EspNeopixelLight import EspNeopixelLight
 from Devices import Devices
 
 app = Flask(__name__)
@@ -16,12 +16,16 @@ make_scheduler(app)
 mqtt_handler: MqttHandler = MqttHandler()
 
 global_state = GlobalState(app)
-woodlamps = WoodlampCollection(Devices.woodlamps, app, global_state)
-alarm = Alarm(app, woodlamps.lights["bedLamp"])
+
+esp_neopixel_lights = {
+    name: EspNeopixelLight(app, name, ip, global_state) for name, ip in Devices.esp_neopixel_lights.items()
+}
+
+alarm = Alarm(app, esp_neopixel_lights["bedLamp"])
 ceiling = CeilingLightsCollection(Devices.ceiling_lamps, app, mqtt_handler)
 spotify = Spotify(app)
 
-controllers = ControllerCollection(alarm, ceiling, woodlamps, global_state, spotify)
+controllers = ControllerCollection(alarm, ceiling, esp_neopixel_lights, global_state, spotify)
 remote = IkeaRemote(controllers, mqtt_handler)
 
 

@@ -5,16 +5,16 @@ from flask import Flask, request, redirect
 from flask_apscheduler import APScheduler
 
 import Scheduler
-from Device.Woodlamp import Woodlamp
+from Device.EspNeopixelLight import EspNeopixelLight
 from TimeFunctions import get_next_valid_time, local_time_today
 
 
 
 
 class Alarm:
-    def __init__(self, app: Flask, woodlamp: Woodlamp):
+    def __init__(self, app: Flask, esp_neopixel_light: EspNeopixelLight):
         self.scheduler: APScheduler = Scheduler.scheduler
-        self.woodlamp = woodlamp
+        self.esp_neopixel_light = esp_neopixel_light
         self.setup_routes(app)
 
     def get_frontend_html(self):
@@ -37,7 +37,7 @@ class Alarm:
         return f"""{local_time_today( job.next_run_time )} <a href="/alarm/{job.id}/delete"> X </a>"""
 
     def wake_up(self):
-        self.woodlamp.set_mode("WakeUp")
+        self.esp_neopixel_light.set_mode("WakeUp")
 
     def setup_routes(self, app):
         @app.route("/alarm", methods=["POST"])

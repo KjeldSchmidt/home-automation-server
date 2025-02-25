@@ -2,7 +2,7 @@ from Alarm import Alarm
 from Device.CeilingLights import CeilingLightsCollection
 from Device.GlobalState import GlobalState
 from Device.Spotify import Spotify
-from Device.Woodlamp import WoodlampCollection
+from Device.EspNeopixelLight import EspNeopixelLight
 from Presets.Preset import Preset
 
 
@@ -11,14 +11,14 @@ class ControllerCollection:
         self,
         alarm: Alarm,
         ceiling_lights: CeilingLightsCollection,
-        woodlamps: WoodlampCollection,
+        esp_neopixel_lights: dict[EspNeopixelLight],
         global_state: GlobalState,
         spotify: Spotify,
     ):
-        self.controllers = [woodlamps, alarm, ceiling_lights, global_state, spotify]
+        self.controllers = [*esp_neopixel_lights.values(), alarm, ceiling_lights, global_state, spotify]
         self.alarm = alarm
         self.ceiling_lights = ceiling_lights
-        self.woodlamps = woodlamps
+        self.esp_neopixel_lights = esp_neopixel_lights
         self.global_state = global_state
 
     def __iter__(self):
@@ -38,6 +38,6 @@ class ControllerCollection:
             lights = self.ceiling_lights.lights[name]
             ceiling_handler(lights)
 
-        for name, woodlamp_handler in preset.woodlamp_handlers.items():
-            lights = self.woodlamps.lights[name]
-            woodlamp_handler(lights)
+        for name, esp_neopixel_light_handler in preset.esp_neopixel_light_handlers.items():
+            lights = self.esp_neopixel_lights[name]
+            esp_neopixel_light_handler(lights)
