@@ -1,14 +1,19 @@
+from flask import Flask
+
 from Alarm import Alarm
 from Device.ZigbeeLight import ZigbeeLight
 from Device.GlobalState import GlobalState
 from Device.Spotify import Spotify
 from Device.EspNeopixelLight import EspNeopixelLight
 from Presets.Preset import Preset
+from DeviceGroup.DeviceGroup import DeviceGroup
 
 
-class ControllerCollection:
+class ControllerCollection(DeviceGroup):
     def __init__(
         self,
+        app: Flask,
+        name: str,
         alarm: Alarm,
         zigbee_lights: dict[str, ZigbeeLight],
         esp_neopixel_lights: dict[str, EspNeopixelLight],
@@ -22,6 +27,7 @@ class ControllerCollection:
             global_state,
             spotify,
         ]
+        super().__init__(app, name, self.controllers)
         self.alarm = alarm
         self.zigbee_lights = zigbee_lights
         self.esp_neopixel_lights = esp_neopixel_lights

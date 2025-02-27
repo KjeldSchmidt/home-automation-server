@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 import requests
 from flask import Flask, request, redirect, render_template
 from Device.Device import Device
-import env
+from home_automation_server import env
 
 
 @dataclass
