@@ -87,7 +87,7 @@ class EspNeopixelLight(Device):
         if not self.available_modes:
             self.fetch_available_modes()
 
-        return render_template("led_strip_lamp.html", next_sundown=self.next_sundown, light=self)
+        return render_template("esp_neopixel_light.html", next_sundown=self.next_sundown, light=self)
 
     def turn_off_all(self):
         self.set_mode("LightsOut")
