@@ -33,6 +33,12 @@ function task_test {
   pytest .
 }
 
+## run: starts the server locally - not for production use
+function task_run {
+  activate_venv
+  python Server.py
+}
+
 ## setup: Installs the python runtime and dependencies.
 function task_setup {
   sudo add-apt-repository ppa:deadsnakes/ppa -y
