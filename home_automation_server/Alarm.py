@@ -9,7 +9,7 @@ from Device.EspNeopixelLight import EspNeopixelLight
 from TimeFunctions import get_next_valid_time, local_time_today
 
 
-class Alarm:
+class Alarm(GuiElement):
     def __init__(self, app: Flask, esp_neopixel_light: EspNeopixelLight):
         self.scheduler: APScheduler = Scheduler.scheduler
         self.esp_neopixel_light = esp_neopixel_light

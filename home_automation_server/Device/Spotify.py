@@ -164,3 +164,9 @@ class Spotify(Device):
 
     def get_frontend_html(self) -> str:
         return render_template("spotify.html")
+
+    def turn_on_all(self):
+        raise NotImplementedError()
+
+    def turn_off_all(self):
+        raise NotImplementedError()
