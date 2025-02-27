@@ -15,7 +15,13 @@ class ControllerCollection:
         global_state: GlobalState,
         spotify: Spotify,
     ):
-        self.controllers = [*esp_neopixel_lights.values(), alarm, *zigbee_lights.values(), global_state, spotify]
+        self.controllers = [
+            *esp_neopixel_lights.values(),
+            alarm,
+            *zigbee_lights.values(),
+            global_state,
+            spotify,
+        ]
         self.alarm = alarm
         self.zigbee_lights = zigbee_lights
         self.esp_neopixel_lights = esp_neopixel_lights
@@ -38,6 +44,9 @@ class ControllerCollection:
             lights = self.zigbee_lights[name]
             zigbee_light_handler(lights)
 
-        for name, esp_neopixel_light_handler in preset.esp_neopixel_light_handlers.items():
+        for (
+            name,
+            esp_neopixel_light_handler,
+        ) in preset.esp_neopixel_light_handlers.items():
             lights = self.esp_neopixel_lights[name]
             esp_neopixel_light_handler(lights)

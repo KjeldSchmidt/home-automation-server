@@ -24,6 +24,8 @@ black = "^25.1.0"
 mypy = "^1.15.0"
 responses = "^0.25.6"
 
+[tool.black]
+line-length = 120
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

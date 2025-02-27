@@ -5,9 +5,14 @@ import paho.mqtt.client as mqtt
 Message: TypeAlias = mqtt.MQTTMessage
 MessageHandler: TypeAlias = Callable[[mqtt.Client, Any, Message], None]
 
+
 class MqttHandler:
     def __init__(self) -> None:
-        mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, "HomeAutomationServer", clean_session=False)
+        mqtt_client = mqtt.Client(
+            mqtt.CallbackAPIVersion.VERSION1,
+            "HomeAutomationServer",
+            clean_session=False,
+        )
         mqtt_client.on_connect = self._on_connect_handler
         mqtt_client.on_disconnect = self._on_disconnect_handler
         mqtt_client.on_message = self._make_on_message_handler()

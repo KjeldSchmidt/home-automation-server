@@ -1,7 +1,5 @@
 class Preset:
-    def __init__(
-        self, *, zigbee_light_handlers: dict = None, esp_neopixel_light_handlers: dict = None
-    ):
+    def __init__(self, *, zigbee_light_handlers: dict = None, esp_neopixel_light_handlers: dict = None):
         if zigbee_light_handlers is None:
             zigbee_light_handlers = {}
         self.zigbee_light_handlers = zigbee_light_handlers

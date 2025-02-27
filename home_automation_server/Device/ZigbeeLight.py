@@ -16,12 +16,18 @@ class ZigbeeLight(Device):
         self.setup_routes(app)
 
     def setup_routes(self, app: Flask):
-        @app.route(f"/zigbee_light/{self.name}/brightness/<int:brightness>", endpoint=f"brightness_{self.name}")
+        @app.route(
+            f"/zigbee_light/{self.name}/brightness/<int:brightness>",
+            endpoint=f"brightness_{self.name}",
+        )
         def zigbee_lights_brightness(brightness: int):
             self.set_brightness_all(brightness)
             return "Ok", 200
 
-        @app.route(f"/zigbee_light/{self.name}/temp/<int:color_temp>", endpoint=f"color_{self.name}")
+        @app.route(
+            f"/zigbee_light/{self.name}/temp/<int:color_temp>",
+            endpoint=f"color_{self.name}",
+        )
         def zigbee_lights_color(color_temp: int):
             self.set_color_temp_all(color_temp)
             return "Ok", 200
@@ -31,12 +37,9 @@ class ZigbeeLight(Device):
             self.toggle()
             return "Ok", 200
 
-
     def send_to_all_lamps(self, payload):
         for lamp_id in self.lamp_ids:
-            self.mqtt_handler.publish(
-                topic=f"zigbee2mqtt/{lamp_id}/set", payload=payload
-            )
+            self.mqtt_handler.publish(topic=f"zigbee2mqtt/{lamp_id}/set", payload=payload)
 
     def set_brightness_all(self, brightness: int):
         self.state = LampState.get_closest(brightness)
@@ -57,6 +60,7 @@ class ZigbeeLight(Device):
 
     def get_frontend_html(self):
         return render_template("zigbee_light.html", lamp_name=self.name)
+
 
 class LampState(Enum):
     ON = 255

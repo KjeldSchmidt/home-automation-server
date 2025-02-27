@@ -38,18 +38,14 @@ class Spotify(Device):
         def next_song():
             self.ensure_token_is_fresh()
             headers = {"Authorization": f"Bearer {self.token}"}
-            response = requests.post(
-                "https://api.spotify.com/v1/me/player/next", headers=headers
-            )
+            response = requests.post("https://api.spotify.com/v1/me/player/next", headers=headers)
             return response.content, response.status_code
 
         @app.route("/spotify/previous")
         def previous_song():
             self.ensure_token_is_fresh()
             headers = {"Authorization": f"Bearer {self.token}"}
-            response = requests.post(
-                "https://api.spotify.com/v1/me/player/previous", headers=headers
-            )
+            response = requests.post("https://api.spotify.com/v1/me/player/previous", headers=headers)
             return response.content, response.status_code
 
         @app.route("/spotify/play-pause")
@@ -96,9 +92,7 @@ class Spotify(Device):
                 "redirect_uri": self.REDIRECT_URI,
                 "scope": "user-modify-playback-state",
             }
-            return redirect(
-                f"{self.AUTH_URL}/authorize?{urlencode(query_params)}", code=302
-            )
+            return redirect(f"{self.AUTH_URL}/authorize?{urlencode(query_params)}", code=302)
 
         @app.route("/spotify/login/callback")
         def trade_auth_code_for_access_token():
@@ -120,9 +114,7 @@ class Spotify(Device):
                     f"redirect_uri={self.REDIRECT_URI}",
                 ]
             )
-            access_code_response = requests.post(
-                f"{self.AUTH_URL}/api/token", headers=headers, data=payload
-            )
+            access_code_response = requests.post(f"{self.AUTH_URL}/api/token", headers=headers, data=payload)
             self.token = access_code_response.json().get("access_token")
             result_message = f"Access token retrieve attempt resulted in: {access_code_response.json()}"
             print(result_message)
@@ -155,13 +147,9 @@ class Spotify(Device):
                 f"client_id={env.SPOTIFY_APP_ID}",
             ]
         )
-        refresh_response = requests.post(
-            f"{self.AUTH_URL}/api/token", headers=headers, data=payload
-        )
+        refresh_response = requests.post(f"{self.AUTH_URL}/api/token", headers=headers, data=payload)
 
-        result_message = (
-            f"Access token refresh attempt resulted in: {refresh_response.json()}"
-        )
+        result_message = f"Access token refresh attempt resulted in: {refresh_response.json()}"
         print(result_message)
 
         token = refresh_response.json().get("access_token")

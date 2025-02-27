@@ -16,9 +16,7 @@ class Alarm:
         self.setup_routes(app)
 
     def get_frontend_html(self):
-        alarms = [
-            job for job in self.scheduler.get_jobs() if job.id.startswith("alarm::")
-        ]
+        alarms = [job for job in self.scheduler.get_jobs() if job.id.startswith("alarm::")]
         alarm_elements = [self.make_alarm_component(alarm) for alarm in alarms]
         set_alarms = "<br />".join(alarm_elements)
         return f"""

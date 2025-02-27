@@ -22,7 +22,9 @@ esp_neopixel_lights = {
 }
 
 alarm = Alarm(app, esp_neopixel_lights["bedLamp"])
-zigbee_lights = {name: ZigbeeLight(app, name, lamp_ids, mqtt_handler) for name, lamp_ids in Devices.zigbee_lights.items()}
+zigbee_lights = {
+    name: ZigbeeLight(app, name, lamp_ids, mqtt_handler) for name, lamp_ids in Devices.zigbee_lights.items()
+}
 spotify = Spotify(app)
 
 controllers = ControllerCollection(alarm, zigbee_lights, esp_neopixel_lights, global_state, spotify)

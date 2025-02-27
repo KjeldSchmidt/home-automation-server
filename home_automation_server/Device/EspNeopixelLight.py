@@ -45,7 +45,10 @@ class EspNeopixelLight(Device):
         self.setup_routes(app)
 
     def setup_routes(self, app: Flask):
-        @app.route(f"/esp_neopixel_light/{self.name}/mode/<string:mode>", endpoint=f"mode_{self.name}")
+        @app.route(
+            f"/esp_neopixel_light/{self.name}/mode/<string:mode>",
+            endpoint=f"mode_{self.name}",
+        )
         def set_mode(mode: str) -> Tuple[str, int]:
             return self.set_mode(mode)
 
@@ -84,9 +87,7 @@ class EspNeopixelLight(Device):
         if not self.available_modes:
             self.fetch_available_modes()
 
-        return render_template(
-            "led_strip_lamp.html", next_sundown=self.next_sundown, light=self
-        )
+        return render_template("led_strip_lamp.html", next_sundown=self.next_sundown, light=self)
 
     def turn_off_all(self):
         self.set_mode("LightsOut")
@@ -103,9 +104,7 @@ class EspNeopixelLight(Device):
 
     def get_next_sundown_time(self) -> datetime:
         try:
-            sun_times_json = requests.get(
-                "https://api.sunrise-sunset.org/json?lat=51&lng=7&formatted=0"
-            )
+            sun_times_json = requests.get("https://api.sunrise-sunset.org/json?lat=51&lng=7&formatted=0")
         except Exception as e:
             print(f"Error: Failure when fetching sunrise times - reusing last known time. Error message: {e}")
             return self.next_sundown + timedelta(days=1)
