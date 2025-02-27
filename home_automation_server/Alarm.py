@@ -1,13 +1,12 @@
 from uuid import uuid1
 
-from apscheduler.job import Job
 from flask import Flask, request, redirect, render_template
 from flask_apscheduler import APScheduler
 
 import Scheduler
 from Device.EspNeopixelLight import EspNeopixelLight
 from GuiElement import GuiElement
-from TimeFunctions import get_next_valid_time, local_time_today
+from util.TimeFunctions import get_next_valid_time, local_time_today
 
 
 class Alarm(GuiElement):

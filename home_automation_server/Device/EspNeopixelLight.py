@@ -10,7 +10,7 @@ from flask_apscheduler import APScheduler
 import Scheduler
 from Device.Device import Device
 from Device.GlobalState import GlobalState
-from TimeFunctions import parse_to_utc, local_time_today
+from util.TimeFunctions import parse_to_utc, local_time_today
 
 
 class EspNeopixelLightState(Enum):
