@@ -1,0 +1,9 @@
+<form class="alarm-form" method="post" action="/alarm">
+    <input type="time" name="time" />
+    <input type="submit" value="Set Alarm" />
+    <br />
+    {% for active_alarm in active_alarms %}
+        {{  local_time_today( active_alarm.next_run_time ) }} <a href="/alarm/{{active_alarm.id}}/delete"> X </a>
+        <br />
+    {% endfor %}
+</form>
