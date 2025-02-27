@@ -1,4 +1,4 @@
-from Server import app
+from main import app
 import pytest
 
 
