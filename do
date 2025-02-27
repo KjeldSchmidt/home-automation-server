@@ -17,44 +17,32 @@ function task_sync {
 
 ## fmt: Apply autoformatting
 function task_fmt {
-  activate_venv
-  black .
+  poetry run black .
 }
 
 ## mypy: Check types
 function task_mypy {
-  activate_venv
-  mypy .
+  poetry run mypy .
 }
 
 ## test: runs all local tests
 function task_test {
-  activate_venv
-  pytest .
+  poetry run pytest .
 }
 
 ## run: starts the server locally - not for production use
 function task_run {
-  activate_venv
-  python Server.py
+  poetry run python Server.py
 }
 
 ## setup: Installs the python runtime and dependencies.
 function task_setup {
   sudo add-apt-repository ppa:deadsnakes/ppa -y
   sudo apt update
-  sudo apt-get install mosquitto python3.10 python3.10-venv -y
-  python3.10 -m venv venv
-  activate_venv
-  pip install --upgrade pip setuptools
-  pip install -r requirements-freeze.txt
-}
-
-function activate_venv {
-  local root
-  root=$(git rev-parse --show-toplevel)
-  cd $root || exit
-  source "venv/bin/activate"
+  sudo apt-get install mosquitto python3.10 pipx -y
+  pipx ensurepath
+  pipx install poetry
+  poetry install
 }
 
 #-------- All task definitions go above this line --------#

@@ -2,9 +2,9 @@ import json
 
 from MqttHandler import MqttHandler
 
-import Presets.Preset
 from Device.ControllerCollection import ControllerCollection
 from util.ToggleList import ToggleList
+from Presets import Preset
 
 
 class IkeaRemote:
@@ -21,10 +21,10 @@ class IkeaRemote:
         self.system_state = ToggleList([True, False])
         self.presets = ToggleList(
             [
-                Presets.Preset.Daylight,
-                Presets.Preset.EveningChillAlone,
-                Presets.Preset.EveningChillFriends,
-                Presets.Preset.Darkness,
+                Preset.Daylight,
+                Preset.EveningChillAlone,
+                Preset.EveningChillFriends,
+                Preset.Darkness,
             ]
         )
 
