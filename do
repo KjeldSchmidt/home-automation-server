@@ -20,6 +20,11 @@ function task_fmt {
   poetry run black .
 }
 
+## fmt-check: Checks if formatting is applied correctly
+function task_fmt_check {
+  poetry run black --check  .
+}
+
 ## mypy: Check types
 function task_mypy {
   poetry run mypy .
@@ -43,6 +48,7 @@ function task_setup {
   pipx ensurepath
   pipx install poetry
   poetry install
+  git config --local core.hooksPath .githooks/
 }
 
 #-------- All task definitions go above this line --------#
