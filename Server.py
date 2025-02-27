@@ -3,7 +3,7 @@ from flask import Flask, render_template
 from Device.GlobalState import GlobalState
 from MqttHandler import MqttHandler
 from Alarm import Alarm
-from Device.CeilingLights import CeilingLightsCollection
+from Device.ZigbeeLight import ZigbeeLight
 from Device.ControllerCollection import ControllerCollection
 from Remote import IkeaRemote
 from Scheduler import make_scheduler
@@ -22,10 +22,10 @@ esp_neopixel_lights = {
 }
 
 alarm = Alarm(app, esp_neopixel_lights["bedLamp"])
-ceiling = CeilingLightsCollection(Devices.ceiling_lamps, app, mqtt_handler)
+zigbee_lights = {name: ZigbeeLight(app, name, lamp_ids, mqtt_handler) for name, lamp_ids in Devices.zigbee_lights.items()}
 spotify = Spotify(app)
 
-controllers = ControllerCollection(alarm, ceiling, esp_neopixel_lights, global_state, spotify)
+controllers = ControllerCollection(alarm, zigbee_lights, esp_neopixel_lights, global_state, spotify)
 remote = IkeaRemote(controllers, mqtt_handler)
 
 

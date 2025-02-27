@@ -1,5 +1,5 @@
 from Alarm import Alarm
-from Device.CeilingLights import CeilingLightsCollection
+from Device.ZigbeeLight import ZigbeeLight
 from Device.GlobalState import GlobalState
 from Device.Spotify import Spotify
 from Device.EspNeopixelLight import EspNeopixelLight
@@ -10,14 +10,14 @@ class ControllerCollection:
     def __init__(
         self,
         alarm: Alarm,
-        ceiling_lights: CeilingLightsCollection,
-        esp_neopixel_lights: dict[EspNeopixelLight],
+        zigbee_lights: dict[str, ZigbeeLight],
+        esp_neopixel_lights: dict[str, EspNeopixelLight],
         global_state: GlobalState,
         spotify: Spotify,
     ):
-        self.controllers = [*esp_neopixel_lights.values(), alarm, ceiling_lights, global_state, spotify]
+        self.controllers = [*esp_neopixel_lights.values(), alarm, *zigbee_lights.values(), global_state, spotify]
         self.alarm = alarm
-        self.ceiling_lights = ceiling_lights
+        self.zigbee_lights = zigbee_lights
         self.esp_neopixel_lights = esp_neopixel_lights
         self.global_state = global_state
 
@@ -34,9 +34,9 @@ class ControllerCollection:
 
     def apply_preset(self, preset: Preset):
         self.turn_off_all()
-        for name, ceiling_handler in preset.ceiling_handlers.items():
-            lights = self.ceiling_lights.lights[name]
-            ceiling_handler(lights)
+        for name, zigbee_light_handler in preset.zigbee_light_handlers.items():
+            lights = self.zigbee_lights[name]
+            zigbee_light_handler(lights)
 
         for name, esp_neopixel_light_handler in preset.esp_neopixel_light_handlers.items():
             lights = self.esp_neopixel_lights[name]

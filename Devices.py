@@ -1,6 +1,6 @@
 class Devices:
     remotes = (["0x5c0272fffeb364e8"],)
-    ceiling_lamps = {
+    zigbee_lights = {
         "ceiling-livingroom": [
             "0x2c1165fffe9552aa",
             "0x2c1165fffe97a7ca",

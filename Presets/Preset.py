@@ -1,10 +1,10 @@
 class Preset:
     def __init__(
-        self, *, ceiling_handlers: dict = None, esp_neopixel_light_handlers: dict = None
+        self, *, zigbee_light_handlers: dict = None, esp_neopixel_light_handlers: dict = None
     ):
-        if ceiling_handlers is None:
-            ceiling_handlers = {}
-        self.ceiling_handlers = ceiling_handlers
+        if zigbee_light_handlers is None:
+            zigbee_light_handlers = {}
+        self.zigbee_light_handlers = zigbee_light_handlers
 
         if esp_neopixel_light_handlers is None:
             esp_neopixel_light_handlers = {}
@@ -12,10 +12,10 @@ class Preset:
 
 
 Darkness = Preset()
-Daylight = Preset(ceiling_handlers={"bedroom": lambda x: x.set_brightness_all(127)})
+Daylight = Preset(zigbee_light_handlers={"bedroom": lambda x: x.set_brightness_all(127)})
 
 EveningChillAlone = Preset(
-    ceiling_handlers={"bedroom": lambda x: x.set_brightness_all(127)},
+    zigbee_light_handlers={"bedroom": lambda x: x.set_brightness_all(127)},
     esp_neopixel_light_handlers={
         "bedLamp": lambda x: x.set_mode("CityAtSundown"),
         "beamLamp": lambda x: x.set_mode("CityAtSundown"),
@@ -23,7 +23,7 @@ EveningChillAlone = Preset(
 )
 
 EveningChillFriends = Preset(
-    ceiling_handlers={"living room": lambda x: x.set_brightness_all(92)},
+    zigbee_light_handlers={"living room": lambda x: x.set_brightness_all(92)},
     esp_neopixel_light_handlers={
         "bedLamp": lambda x: x.set_mode("CityAtSundown"),
         "beamLamp": lambda x: x.set_mode("CityAtSundown"),
