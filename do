@@ -22,7 +22,7 @@ function task_fmt {
 
 ## fmt-check: Checks if formatting is applied correctly
 function task_fmt_check {
-  poetry run black --check  .
+  poetry run black --check .
 }
 
 ## mypy: Check types
@@ -45,8 +45,9 @@ function task_setup {
   sudo add-apt-repository ppa:deadsnakes/ppa -y
   sudo apt update
   sudo apt-get install mosquitto python3.10 pipx -y
-  pipx ensurepath
   pipx install poetry
+  pipx ensurepath
+  source ~/.bashrc
   poetry install
   git config --local core.hooksPath .githooks/
 }
@@ -61,7 +62,7 @@ cmd=${1:-}
 shift || true
 resolved_command=$(echo "task_${cmd}" | sed 's/-/_/g')
 if [[ "$(LC_ALL=C type -t "${resolved_command}")" == "function" ]]; then
-    pushd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null
+    pushd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null || exit
     ${resolved_command} "$@"
 else
     task_usage
