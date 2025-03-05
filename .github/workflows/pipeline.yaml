@@ -1,6 +1,6 @@
 name: Quality Gates
 
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   build:
@@ -19,6 +19,6 @@ jobs:
 
     - name: "Install dependencies"
       run: poetry install
-      
+
     - name: "Check formating"
       run: ./do fmt-check
