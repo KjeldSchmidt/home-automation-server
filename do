@@ -32,7 +32,9 @@ function task_mypy {
 
 ## test: runs all local tests
 function task_test {
+  pushd home_automation_server
   poetry run pytest .
+  popd
 }
 
 ## run: starts the server locally - not for production use

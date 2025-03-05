@@ -7,10 +7,10 @@ import requests
 from flask import Flask, render_template
 from flask_apscheduler import APScheduler
 
-import Scheduler
-from Device.Device import Device
-from Device.GlobalState import GlobalState
-from util.TimeFunctions import parse_to_utc, local_time_today
+from home_automation_server import Scheduler
+from .Device import Device
+from home_automation_server.Device.GlobalState import GlobalState
+from home_automation_server.util.TimeFunctions import parse_to_utc, local_time_today
 
 
 class EspNeopixelLightState(Enum):

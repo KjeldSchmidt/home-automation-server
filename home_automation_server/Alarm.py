@@ -3,10 +3,10 @@ from uuid import uuid1
 from flask import Flask, request, redirect, render_template
 from flask_apscheduler import APScheduler
 
-import Scheduler
-from Device.EspNeopixelLight import EspNeopixelLight
-from GuiElement import GuiElement
-from util.TimeFunctions import get_next_valid_time, local_time_today
+from home_automation_server import Scheduler
+from home_automation_server.Device.EspNeopixelLight import EspNeopixelLight
+from home_automation_server.GuiElement import GuiElement
+from home_automation_server.util.TimeFunctions import get_next_valid_time, local_time_today
 
 
 class Alarm(GuiElement):

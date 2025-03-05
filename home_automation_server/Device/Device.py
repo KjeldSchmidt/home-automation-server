@@ -1,6 +1,6 @@
 import abc
 
-from GuiElement import GuiElement
+from home_automation_server.GuiElement import GuiElement
 
 
 class Device(GuiElement, abc.ABC):

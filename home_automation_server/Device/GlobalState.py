@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect
 
-from Device.Device import Device
+from .Device import Device
 
 
 class GlobalState(Device):

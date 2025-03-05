@@ -3,10 +3,10 @@ import importlib
 from flask import Flask, render_template
 
 from home_automation_server import env
-from MqttHandler import MqttHandler
-from Scheduler import make_scheduler
+from home_automation_server.MqttHandler import MqttHandler
+from home_automation_server.Scheduler import make_scheduler
 
-UserConfig = importlib.import_module(env.USER_CONFIG_MODULE)
+UserConfig = importlib.import_module(f"home_automation_server.{env.USER_CONFIG_MODULE}")
 
 
 app = Flask(__name__)

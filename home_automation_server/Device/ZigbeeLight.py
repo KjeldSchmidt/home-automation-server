@@ -2,8 +2,8 @@ from enum import Enum
 
 from flask import Flask, render_template
 
-from MqttHandler import MqttHandler
-from Device.Device import Device
+from home_automation_server.MqttHandler import MqttHandler
+from home_automation_server.Device.Device import Device
 
 
 class ZigbeeLight(Device):

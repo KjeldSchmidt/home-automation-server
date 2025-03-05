@@ -1,13 +1,13 @@
 from flask import Flask
 
-from MqttHandler import MqttHandler
+from home_automation_server.MqttHandler import MqttHandler
 from .DeviceConfig import DeviceConfig
-from Device.GlobalState import GlobalState
-from Alarm import Alarm
-from Device.ZigbeeLight import ZigbeeLight
+from home_automation_server.Device.GlobalState import GlobalState
+from home_automation_server.Alarm import Alarm
+from home_automation_server.Device.ZigbeeLight import ZigbeeLight
 from .ControllerCollection import ControllerCollection
-from Device.Spotify import Spotify
-from Device.EspNeopixelLight import EspNeopixelLight
+from home_automation_server.Device.Spotify import Spotify
+from home_automation_server.Device.EspNeopixelLight import EspNeopixelLight
 
 
 def initialize(app: Flask, mqtt_handler: MqttHandler) -> ControllerCollection:

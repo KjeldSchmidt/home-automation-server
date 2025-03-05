@@ -1,4 +1,4 @@
-from main import app
+from home_automation_server.main import app
 import pytest
 
 
