@@ -13,9 +13,9 @@ class ZigbeeLight(Device):
         self.lamp_ids = lamp_ids
         self.state: LampState = LampState.OFF
 
-        self.setup_routes(app)
+        self._setup_routes(app)
 
-    def setup_routes(self, app: Flask):
+    def _setup_routes(self, app: Flask):
         @app.route(
             f"/zigbee_light/{self.name}/brightness/<int:brightness>",
             endpoint=f"brightness_{self.name}",

@@ -10,9 +10,9 @@ class DeviceGroup(GuiElement):
         self.devices = devices
         self.name = name
 
-        self.setup_routes(app)
+        self._setup_routes(app)
 
-    def setup_routes(self, app: Flask):
+    def _setup_routes(self, app: Flask):
         @app.route(f"/{self.name}", endpoint=f"device_group_{self.name}")
         def fetch_device_group_frontend() -> str:
             return self.get_frontend_html()

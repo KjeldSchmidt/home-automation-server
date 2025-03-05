@@ -13,7 +13,7 @@ class Alarm(GuiElement):
     def __init__(self, app: Flask, esp_neopixel_light: EspNeopixelLight):
         self.scheduler: APScheduler = Scheduler.scheduler
         self.esp_neopixel_light = esp_neopixel_light
-        self.setup_routes(app)
+        self._setup_routes(app)
 
     def get_frontend_html(self):
         active_alarms = [job for job in self.scheduler.get_jobs() if job.id.startswith("alarm::")]
@@ -22,7 +22,7 @@ class Alarm(GuiElement):
     def wake_up(self):
         self.esp_neopixel_light.set_mode("WakeUp")
 
-    def setup_routes(self, app):
+    def _setup_routes(self, app):
         @app.route("/alarm", methods=["POST"])
         def set_alarm():
             alarm_time = get_next_valid_time(request.form["time"])

@@ -6,9 +6,9 @@ from Device.Device import Device
 class GlobalState(Device):
     def __init__(self, app: Flask):
         self.is_turned_on = True
-        self.setup_routes(app)
+        self._setup_routes(app)
 
-    def setup_routes(self, app: Flask):
+    def _setup_routes(self, app: Flask):
         @app.route("/global_state/is_turned_on/<string:state_to_set>")
         def set_turned_on(state_to_set: str):
             # Todo: Introduce a converter, I guess, or find out if there is one... or just switch to FastAPI already.

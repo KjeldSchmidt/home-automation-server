@@ -31,9 +31,9 @@ class Spotify(Device):
         refresh_response = self.refresh_access_token()
         self.token: str = refresh_response.access_token
         self.token_expiry: datetime = refresh_response.expiry_datetime
-        self.setup_routes(app)
+        self._setup_routes(app)
 
-    def setup_routes(self, app: Flask):
+    def _setup_routes(self, app: Flask):
         @app.route("/spotify/next")
         def next_song():
             self.ensure_token_is_fresh()

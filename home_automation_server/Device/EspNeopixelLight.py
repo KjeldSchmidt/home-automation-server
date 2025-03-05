@@ -42,9 +42,9 @@ class EspNeopixelLight(Device):
         self.schedule_irregular()
 
         self.fetch_available_modes()
-        self.setup_routes(app)
+        self._setup_routes(app)
 
-    def setup_routes(self, app: Flask):
+    def _setup_routes(self, app: Flask):
         @app.route(
             f"/esp_neopixel_light/{self.name}/mode/<string:mode>",
             endpoint=f"mode_{self.name}",
