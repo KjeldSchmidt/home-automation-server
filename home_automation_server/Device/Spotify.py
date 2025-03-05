@@ -5,6 +5,8 @@ from urllib.parse import urlencode
 
 import requests
 from flask import Flask, request, redirect, render_template
+from werkzeug import Response
+
 from .Device import Device
 from home_automation_server import env
 
@@ -17,9 +19,13 @@ class AuthorisationResponse:
     response_body: str
     expiry_datetime: datetime = field(init=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        expires_in = self.expires_in
+        if expires_in is None:
+            expires_in = 29 * 60  # Assume token expires in 30 minutes, add some buffer
+
         now = datetime.now()
-        self.expiry_datetime = now + timedelta(seconds=self.expires_in - 60)
+        self.expiry_datetime = now + timedelta(seconds=expires_in - 60)
 
 
 class Spotify(Device):
@@ -30,26 +36,26 @@ class Spotify(Device):
     def __init__(self, app: Flask):
         refresh_response = self.refresh_access_token()
         self.token: str | None = refresh_response.access_token
-        self.token_expiry: datetime = refresh_response.expiry_datetime
+        self.token_expiry = refresh_response.expiry_datetime
         self._setup_routes(app)
 
-    def _setup_routes(self, app: Flask):
+    def _setup_routes(self, app: Flask) -> None:
         @app.route("/spotify/next")
-        def next_song():
+        def next_song() -> Response:
             self.ensure_token_is_fresh()
             headers = {"Authorization": f"Bearer {self.token}"}
             response = requests.post("https://api.spotify.com/v1/me/player/next", headers=headers)
-            return response.content, response.status_code
+            return Response(response.content, response.status_code)
 
         @app.route("/spotify/previous")
-        def previous_song():
+        def previous_song() -> Response:
             self.ensure_token_is_fresh()
             headers = {"Authorization": f"Bearer {self.token}"}
             response = requests.post("https://api.spotify.com/v1/me/player/previous", headers=headers)
-            return response.content, response.status_code
+            return Response(response.content, response.status_code)
 
         @app.route("/spotify/play-pause")
-        def play_pause():
+        def play_pause() -> Response:
             self.ensure_token_is_fresh()
             headers = {
                 "Authorization": f"Bearer {self.token}",
@@ -64,10 +70,10 @@ class Spotify(Device):
                 headers=headers,
                 json={"context_uri": "spotify:playlist:3PhrgXmaPgAqKuYCNP8QrH"},
             )
-            return response.content, response.status_code
+            return Response(response.content, response.status_code)
 
         @app.route("/spotify/play/<string:category_id>/<string:spotify_id>")
-        def play_thing(category_id: str, spotify_id: str):
+        def play_thing(category_id: str, spotify_id: str) -> Response:
             self.ensure_token_is_fresh()
             headers = {
                 "Authorization": f"Bearer {self.token}",
@@ -82,10 +88,10 @@ class Spotify(Device):
                 headers=headers,
                 json={"context_uri": f"spotify:{category_id}:{spotify_id}"},
             )
-            return response.content, response.status_code
+            return Response(response.content, response.status_code)
 
         @app.route("/spotify/login")
-        def request_user_auth():
+        def request_user_auth() -> Response:
             query_params = {
                 "client_id": env.SPOTIFY_APP_ID,
                 "response_type": "code",
@@ -95,7 +101,7 @@ class Spotify(Device):
             return redirect(f"{self.AUTH_URL}/authorize?{urlencode(query_params)}", code=302)
 
         @app.route("/spotify/login/callback")
-        def trade_auth_code_for_access_token():
+        def trade_auth_code_for_access_token() -> str:
             if request.args.get("error"):
                 return "You fucked up mate"
 
@@ -126,7 +132,7 @@ class Spotify(Device):
             refresh_result = self.refresh_access_token()
             return refresh_result.response_body, refresh_result.status_code
 
-    def ensure_token_is_fresh(self):
+    def ensure_token_is_fresh(self) -> None:
         if datetime.now() > self.token_expiry:
             refresh_response = self.refresh_access_token()
             self.token = refresh_response.access_token
@@ -165,8 +171,8 @@ class Spotify(Device):
     def get_frontend_html(self) -> str:
         return render_template("spotify.html")
 
-    def turn_on_all(self):
+    def turn_on_all(self) -> None:
         raise NotImplementedError()
 
-    def turn_off_all(self):
+    def turn_off_all(self) -> None:
         raise NotImplementedError()

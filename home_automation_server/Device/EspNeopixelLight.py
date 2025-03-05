@@ -18,7 +18,7 @@ class EspNeopixelLightState(Enum):
     Pacifica = "Pacifica"
     LightsOut = "LightsOut"
 
-    def next(self):
+    def next(self) -> "EspNeopixelLightState":
         return {
             EspNeopixelLightState.CityAtSundown: EspNeopixelLightState.Pacifica,
             EspNeopixelLightState.Pacifica: EspNeopixelLightState.LightsOut,
@@ -44,7 +44,7 @@ class EspNeopixelLight(Device):
         self.fetch_available_modes()
         self._setup_routes(app)
 
-    def _setup_routes(self, app: Flask):
+    def _setup_routes(self, app: Flask) -> None:
         @app.route(
             f"/esp_neopixel_light/{self.name}/mode/<string:mode>",
             endpoint=f"mode_{self.name}",
@@ -53,7 +53,7 @@ class EspNeopixelLight(Device):
             return self.set_mode(mode)
 
         @app.route(f"/esp_neopixel_light/{self.name}/toggle", endpoint=f"toggle_{self.name}")
-        def toggle_mode():
+        def toggle_mode() -> Tuple[str, int]:
             self.toggle()
             return "Accepted", 202
 
@@ -79,20 +79,20 @@ class EspNeopixelLight(Device):
             print(e)
             return "Failed", 500
 
-    def toggle(self):
+    def toggle(self) -> None:
         self.state = self.state.next()
         self.set_mode(self.state.value)
 
-    def get_frontend_html(self):
+    def get_frontend_html(self) -> str:
         if not self.available_modes:
             self.fetch_available_modes()
 
         return render_template("esp_neopixel_light.html", next_sundown=self.next_sundown, light=self)
 
-    def turn_off_all(self):
+    def turn_off_all(self) -> None:
         self.set_mode("LightsOut")
 
-    def turn_on_all(self):
+    def turn_on_all(self) -> None:
         self.set_mode("CityAtSundown")
 
     def schedule_sundown_lamp(self) -> None:

@@ -1,5 +1,20 @@
+from typing import Callable, Any
+
+from home_automation_server.Device.EspNeopixelLight import EspNeopixelLight
+from home_automation_server.Device.ZigbeeLight import ZigbeeLight
+
+
+ZigbeeLightHandler = Callable[[ZigbeeLight], Any]  # type: ignore[explicit-any]
+EspNeopixelLightHandler = Callable[[EspNeopixelLight], Any]  # type: ignore[explicit-any]
+
+
 class Preset:
-    def __init__(self, *, zigbee_light_handlers: dict | None = None, esp_neopixel_light_handlers: dict | None = None):
+    def __init__(
+        self,
+        *,
+        zigbee_light_handlers: dict[str, ZigbeeLightHandler] | None = None,
+        esp_neopixel_light_handlers: dict[str, EspNeopixelLightHandler] | None = None
+    ):
         if zigbee_light_handlers is None:
             zigbee_light_handlers = {}
         self.zigbee_light_handlers = zigbee_light_handlers
