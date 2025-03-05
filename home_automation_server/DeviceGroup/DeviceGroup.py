@@ -5,9 +5,10 @@ from home_automation_server.GuiElement import GuiElement
 
 
 class DeviceGroup(GuiElement):
-    def __init__(self, app: Flask, name: str, devices: list[Device]) -> None:
+    def __init__(self, app: Flask, name: str, devices: list[Device], gui_elements: list[GuiElement]) -> None:
         super().__init__()
         self.devices = devices
+        self.gui_elements = gui_elements
         self.name = name
 
         self._setup_routes(app)
@@ -21,5 +22,10 @@ class DeviceGroup(GuiElement):
         frontend_parts = []
         for device in self.devices:
             frontend_parts.append(device.get_frontend_html())
+
+        for gui_element in self.gui_elements:
+            frontend_parts.append(gui_element.get_frontend_html())
+
+        print(frontend_parts)
 
         return "<br/>".join(frontend_parts)

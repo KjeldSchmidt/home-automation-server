@@ -29,7 +29,7 @@ class Spotify(Device):
 
     def __init__(self, app: Flask):
         refresh_response = self.refresh_access_token()
-        self.token: str = refresh_response.access_token
+        self.token: str | None = refresh_response.access_token
         self.token_expiry: datetime = refresh_response.expiry_datetime
         self._setup_routes(app)
 

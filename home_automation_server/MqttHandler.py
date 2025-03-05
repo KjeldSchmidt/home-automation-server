@@ -35,7 +35,7 @@ class MqttHandler:
         # To access the list of all message handlers, we need `self` to be available to the mqtt.Client.
         # To achieve this, we create the handler as a closure, binding self to the handler permanently.
         def on_message_handler(client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage):
-            print(f"Received Mqtt message, topic: {msg.topic}, msg: {msg.payload}")
+            print(f"Received Mqtt message, topic: {msg.topic}, msg: {msg.payload.decode()}")
             for message_handler in self._on_message_handlers:
                 message_handler(client, userdata, msg)
 

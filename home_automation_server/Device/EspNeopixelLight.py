@@ -35,7 +35,7 @@ class EspNeopixelLight(Device):
 
         self.state: EspNeopixelLightState = EspNeopixelLightState.LightsOut
 
-        self.scheduler: APScheduler = Scheduler.scheduler
+        self.scheduler: APScheduler = Scheduler.get_scheduler()
         self.next_sundown: datetime | None = None
 
         self.schedule_scheduling()
@@ -102,11 +102,13 @@ class EspNeopixelLight(Device):
             next_run_time=self.get_next_sundown_time(),
         )
 
-    def get_next_sundown_time(self) -> datetime:
+    def get_next_sundown_time(self) -> datetime | None:
         try:
             sun_times_json = requests.get("https://api.sunrise-sunset.org/json?lat=51&lng=7&formatted=0")
         except Exception as e:
             print(f"Error: Failure when fetching sunrise times - reusing last known time. Error message: {e}")
+            if self.next_sundown is None:
+                return None
             return self.next_sundown + timedelta(days=1)
 
         sun_times_times_utc = json.loads(sun_times_json.text)["results"]
@@ -117,6 +119,9 @@ class EspNeopixelLight(Device):
         return twilight_start_utc
 
     def get_local_next_sundown(self) -> str:
+        if self.next_sundown is None:
+            return "Sundown time could not be fetched"
+
         return local_time_today(self.next_sundown)
 
     def schedule_scheduling(self) -> None:

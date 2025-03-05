@@ -10,11 +10,11 @@ class GlobalState(Device):
 
     def _setup_routes(self, app: Flask):
         @app.route("/global_state/is_turned_on/<string:state_to_set>")
-        def set_turned_on(state_to_set: str):
+        def set_turned_on(state_to_set_raw: str):
             # Todo: Introduce a converter, I guess, or find out if there is one... or just switch to FastAPI already.
-            if state_to_set == "true":
+            if state_to_set_raw == "true":
                 state_to_set = True
-            elif state_to_set == "false":
+            elif state_to_set_raw == "false":
                 state_to_set = False
             else:
                 return "Truth value needs to be either 'true' or 'false'", 400

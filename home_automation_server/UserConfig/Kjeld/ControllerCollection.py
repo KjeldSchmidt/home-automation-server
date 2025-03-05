@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from home_automation_server.Alarm import Alarm
 from home_automation_server.Device.ZigbeeLight import ZigbeeLight
@@ -22,12 +22,22 @@ class ControllerCollection(DeviceGroup):
     ):
         self.controllers = [
             *esp_neopixel_lights.values(),
+            *zigbee_lights.values(),
+            global_state,
+            spotify,
+        ]
+
+        self.gui_elements = [alarm]
+
+        self.gui_elements = [
+            *esp_neopixel_lights.values(),
             alarm,
             *zigbee_lights.values(),
             global_state,
             spotify,
         ]
-        super().__init__(app, name, self.controllers)
+
+        super().__init__(app, name, self.controllers, self.gui_elements)
         self.alarm = alarm
         self.zigbee_lights = zigbee_lights
         self.esp_neopixel_lights = esp_neopixel_lights
@@ -47,12 +57,15 @@ class ControllerCollection(DeviceGroup):
     def apply_preset(self, preset: Preset):
         self.turn_off_all()
         for name, zigbee_light_handler in preset.zigbee_light_handlers.items():
-            lights = self.zigbee_lights[name]
-            zigbee_light_handler(lights)
+            zigbee_lights = self.zigbee_lights[name]
+            zigbee_light_handler(zigbee_lights)
 
         for (
             name,
             esp_neopixel_light_handler,
         ) in preset.esp_neopixel_light_handlers.items():
-            lights = self.esp_neopixel_lights[name]
-            esp_neopixel_light_handler(lights)
+            esp_lights = self.esp_neopixel_lights[name]
+            esp_neopixel_light_handler(esp_lights)
+
+    def get_frontend_html(self) -> str:
+        return render_template("index.html", gui_elements=self.gui_elements)

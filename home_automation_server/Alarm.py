@@ -11,7 +11,7 @@ from home_automation_server.util.TimeFunctions import get_next_valid_time, local
 
 class Alarm(GuiElement):
     def __init__(self, app: Flask, esp_neopixel_light: EspNeopixelLight):
-        self.scheduler: APScheduler = Scheduler.scheduler
+        self.scheduler: APScheduler = Scheduler.get_scheduler()
         self.esp_neopixel_light = esp_neopixel_light
         self._setup_routes(app)
 

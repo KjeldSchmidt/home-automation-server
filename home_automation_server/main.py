@@ -12,12 +12,12 @@ UserConfig = importlib.import_module(f"home_automation_server.{env.USER_CONFIG_M
 app = Flask(__name__)
 make_scheduler(app)
 mqtt_handler: MqttHandler = MqttHandler()
-controllers = UserConfig.initialize(app, mqtt_handler)
+main_device_group = UserConfig.initialize(app, mqtt_handler)
 
 
 @app.route("/")
 def main_page():
-    return render_template("index.html", controllers=controllers)
+    return main_device_group.get_frontend_html()
 
 
 if __name__ == "__main__":

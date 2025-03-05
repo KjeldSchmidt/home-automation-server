@@ -27,7 +27,7 @@ function task_fmt_check {
 
 ## mypy: Check types
 function task_mypy {
-  poetry run mypy .
+  poetry run mypy home_automation_server
 }
 
 ## test: runs all local tests
