@@ -22,3 +22,10 @@ jobs:
 
     - name: "Check formating"
       run: ./do fmt-check
+
+    - name: "Run mypy"
+      continue-on-error: true
+      run: ./do mypy
+
+    - name: "Execute tests"
+      run: ./do test
