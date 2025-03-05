@@ -24,7 +24,6 @@ jobs:
       run: ./do fmt-check
 
     - name: "Run mypy"
-      continue-on-error: true
       run: ./do mypy
 
     - name: "Execute tests"
