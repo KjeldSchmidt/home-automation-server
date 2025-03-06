@@ -17,7 +17,7 @@ def initialize(app: Flask, mqtt_handler: MqttHandler) -> ControllerCollection:
         name: EspNeopixelLight(app, name, ip, global_state) for name, ip in DeviceConfig.esp_neopixel_lights.items()
     }
 
-    alarm = Alarm(app, esp_neopixel_lights["bedLamp"])
+    alarm = Alarm(app, lambda: esp_neopixel_lights["bedLamp"].set_mode("WakeUp"))
     zigbee_lights = {
         name: ZigbeeLight(app, name, lamp_ids, mqtt_handler) for name, lamp_ids in DeviceConfig.zigbee_lights.items()
     }
