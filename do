@@ -27,7 +27,9 @@ function task_fmt_check {
 
 ## mypy: Check types
 function task_mypy {
-  poetry run mypy home_automation_server
+  pushd home_automation_server
+  poetry run mypy .
+  popd
 }
 
 ## test: runs all local tests
@@ -40,6 +42,13 @@ function task_test {
 ## run: starts the server locally - not for production use
 function task_run {
   poetry run python home_automation_server/main.py
+}
+
+## quality-gates: runs local quality gates, e.g. before commiting
+function task_quality_gates {
+  task_fmt
+  task_mypy
+  task_test
 }
 
 ## setup: Installs the python runtime and dependencies.

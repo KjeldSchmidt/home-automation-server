@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Any
 from uuid import uuid1
 
 from flask import Flask, request, redirect, render_template
@@ -9,9 +9,11 @@ import Scheduler
 from GuiElement import GuiElement
 from util.TimeFunctions import get_next_valid_time, local_time_today
 
+IgnoredReturnType = Any  # type: ignore[explicit-any]
+
 
 class Alarm(GuiElement):
-    def __init__(self, app: Flask, triggered_action: Callable[[], None]) -> None:
+    def __init__(self, app: Flask, triggered_action: Callable[[], IgnoredReturnType]) -> None:
         self.scheduler: APScheduler = Scheduler.get_scheduler()
         self._setup_routes(app)
         self.triggered_action = triggered_action
