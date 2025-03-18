@@ -8,7 +8,7 @@ from flask import Flask, request, redirect, render_template
 from werkzeug import Response
 
 from .Device import Device
-from home_automation_server import env
+import env
 
 
 @dataclass

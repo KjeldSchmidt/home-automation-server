@@ -39,7 +39,7 @@ function task_test {
 
 ## run: starts the server locally - not for production use
 function task_run {
-  poetry run python Server.py
+  poetry run python home_automation_server/main.py
 }
 
 ## setup: Installs the python runtime and dependencies.

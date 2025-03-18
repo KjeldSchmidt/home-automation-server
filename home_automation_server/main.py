@@ -2,12 +2,12 @@ import importlib
 
 from flask import Flask
 
-from home_automation_server.DeviceGroup.DeviceGroup import DeviceGroup
-from home_automation_server import env
-from home_automation_server.MqttHandler import MqttHandler
-from home_automation_server.Scheduler import make_scheduler
+from DeviceGroup.DeviceGroup import DeviceGroup
+import env
+from MqttHandler import MqttHandler
+from Scheduler import make_scheduler
 
-UserConfig = importlib.import_module(f"home_automation_server.{env.USER_CONFIG_MODULE}")
+UserConfig = importlib.import_module(f"{env.USER_CONFIG_MODULE}")
 
 
 app = Flask(__name__)

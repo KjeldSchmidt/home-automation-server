@@ -4,14 +4,14 @@ from typing_extensions import Self
 
 from flask import Flask, render_template
 
-from home_automation_server.Device.Device import Device
-from home_automation_server.Alarm import Alarm
-from home_automation_server.Device.ZigbeeLight import ZigbeeLight
-from home_automation_server.Device.GlobalState import GlobalState
-from home_automation_server.Device.Spotify import Spotify
-from home_automation_server.Device.EspNeopixelLight import EspNeopixelLight
-from home_automation_server.Presets.Preset import Preset
-from home_automation_server.DeviceGroup.DeviceGroup import DeviceGroup
+from Device.Device import Device
+from Alarm import Alarm
+from Device.ZigbeeLight import ZigbeeLight
+from Device.GlobalState import GlobalState
+from Device.Spotify import Spotify
+from Device.EspNeopixelLight import EspNeopixelLight
+from Presets.Preset import Preset
+from DeviceGroup.DeviceGroup import DeviceGroup
 
 
 class ControllerCollection(DeviceGroup):

@@ -1,7 +1,7 @@
 from typing import Callable, Any
 
-from home_automation_server.Device.EspNeopixelLight import EspNeopixelLight
-from home_automation_server.Device.ZigbeeLight import ZigbeeLight
+from Device.EspNeopixelLight import EspNeopixelLight
+from Device.ZigbeeLight import ZigbeeLight
 
 
 ZigbeeLightHandler = Callable[[ZigbeeLight], Any]  # type: ignore[explicit-any]

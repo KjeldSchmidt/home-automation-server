@@ -1,7 +1,7 @@
 from flask import Flask
 
-from home_automation_server.Device.Device import Device
-from home_automation_server.GuiElement import GuiElement
+from Device.Device import Device
+from GuiElement import GuiElement
 
 
 class DeviceGroup(GuiElement):

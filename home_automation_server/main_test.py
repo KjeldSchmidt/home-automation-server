@@ -1,6 +1,6 @@
 from flask.testing import FlaskClient
 
-from home_automation_server.main import app
+from main import app
 import pytest
 
 

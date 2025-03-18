@@ -5,9 +5,9 @@ from flask import Flask, request, redirect, render_template
 from werkzeug.wrappers import Response
 from flask_apscheduler import APScheduler
 
-from home_automation_server import Scheduler
-from home_automation_server.GuiElement import GuiElement
-from home_automation_server.util.TimeFunctions import get_next_valid_time, local_time_today
+import Scheduler
+from GuiElement import GuiElement
+from util.TimeFunctions import get_next_valid_time, local_time_today
 
 
 class Alarm(GuiElement):
