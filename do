@@ -9,11 +9,13 @@ function task_sync {
     -r . \
     --exclude 'venv' \
     --exclude 'wsl-venv' \
-    "${ssh_connect_string}:~/home_automation"
-  ssh "${ssh_connect_string}" 'mv ~/home_automation/configuration.yaml /opt/zigbee2mqtt/data/configuration.yaml'
+    "${ssh_connect_string}:~/home-automation-server"
+  local user_config_dir
+  user_config_dir=$(poetry run python -c "from home_automation_server import env; print(env.USER_CONFIG_MODULE.replace('.', '/'))")
+  ssh "${ssh_connect_string}" "mv ~/home-automation-server/home_automation_server/${user_config_dir}/configuration.yaml /opt/zigbee2mqtt/data/configuration.yaml"
 
   ssh "${ssh_connect_string}" 'sudo systemctl restart zigbee2mqtt.service'
-  ssh "${ssh_connect_string}" 'sudo systemctl restart home-automation.service'
+  ssh "${ssh_connect_string}" 'sudo systemctl restart home-automation-server.service'
 }
 
 ## fmt: Apply autoformatting
@@ -53,15 +55,15 @@ function task_quality_gates {
 }
 
 ## setup: Installs the python runtime and dependencies.
-function task_setup {
-  sudo add-apt-repository ppa:deadsnakes/ppa -y
+function task_setup { #todo: separate setup for prod&local
+  sudo add-apt-repository ppa:deadsnakes/ppa -y #this needs to go only in local
   sudo apt update
   sudo apt-get install mosquitto python3.10 pipx -y
   pipx install poetry
   pipx ensurepath
   source ~/.bashrc
   poetry install
-  git config --local core.hooksPath .githooks/
+  git config --local core.hooksPath .githooks/ #this needs to go only in local
 }
 
 #-------- All task definitions go above this line --------#

@@ -1,0 +1,35 @@
+homeassistant: false
+permit_join: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost
+serial:
+  port: /dev/ttyACM0
+
+
+devices:
+  # Jan's Zimmer
+  '0xbc026efffe002694':
+    friendly_name: 'jan-on-off-switch'
+    legacy: false
+  '0xb43522fffe9ac19e':
+    friendly_name: 'ceiling-jan-1of3'
+  '0x8c6fb9fffeca1fb1':
+    friendly_name: 'ceiling-jan-2of3'
+  '0xb43522fffe9ac195':
+    friendly_name: 'ceiling-jan-3of3'
+
+groups:
+  '1':
+    friendly_name: 'ceiling-jan'
+    transition: 2
+    optimistic: false
+    devices:
+      - 'ceiling-jan-1of3'
+      - 'ceiling-jan-2of3'
+      - 'ceiling-jan-3of3'
+
+advanced:
+  log_output: ['console'] # this leads to log files only be saved (under journalctl) and not twicetwice
+
+# Todo: refactor DeviceConfig away, so this config is the sole authority
