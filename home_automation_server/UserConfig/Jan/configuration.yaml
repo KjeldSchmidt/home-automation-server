@@ -1,0 +1,9 @@
+homeassistant: false
+permit_join: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost
+serial:
+  port: /dev/ttyACM0
+
+# Todo: refactor DeviceConfig away, so this config is the sole authority
