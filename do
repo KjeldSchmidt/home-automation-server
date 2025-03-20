@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eu
 
 ssh_connect_string=pi@192.168.178.2
 

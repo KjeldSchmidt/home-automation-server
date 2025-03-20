@@ -8,7 +8,6 @@ from flask import Flask, request, redirect, render_template
 from werkzeug import Response
 
 from .Device import Device
-import env
 
 
 @dataclass
@@ -33,11 +32,14 @@ class Spotify(Device):
     AUTH_URL = "https://accounts.spotify.com"
     REDIRECT_URI = "http://192.168.178.2:5000/spotify/login/callback"
 
-    def __init__(self, app: Flask):
+    def __init__(self, app: Flask, app_id: str, app_secret: str, refresh_token: str):
         refresh_response = self.refresh_access_token()
         self.token: str | None = refresh_response.access_token
         self.token_expiry = refresh_response.expiry_datetime
         self._setup_routes(app)
+        self.app_id = app_id
+        self.app_secret = app_secret
+        self.refresh_token = refresh_token
 
     def _setup_routes(self, app: Flask) -> None:
         @app.route("/spotify/next")
@@ -93,7 +95,7 @@ class Spotify(Device):
         @app.route("/spotify/login")
         def request_user_auth() -> Response:
             query_params = {
-                "client_id": env.SPOTIFY_APP_ID,
+                "client_id": self.app_id,
                 "response_type": "code",
                 "redirect_uri": self.REDIRECT_URI,
                 "scope": "user-modify-playback-state",
@@ -107,7 +109,7 @@ class Spotify(Device):
 
             auth_code = request.args.get("code")
 
-            client_auth_raw = f"{env.SPOTIFY_APP_ID}:{env.SPOTIFY_APP_SECRET}"
+            client_auth_raw = f"{self.app_id}:{self.app_secret}"
             client_auth = base64.b64encode(client_auth_raw.encode()).decode()
             headers = {
                 "Authorization": f"Basic {client_auth}",
@@ -139,7 +141,7 @@ class Spotify(Device):
             self.token_expiry = refresh_response.expiry_datetime
 
     def refresh_access_token(self) -> AuthorisationResponse:
-        client_auth_raw = f"{env.SPOTIFY_APP_ID}:{env.SPOTIFY_APP_SECRET}"
+        client_auth_raw = f"{self.app_id}:{self.app_secret}"
         client_auth = base64.b64encode(client_auth_raw.encode()).decode()
         headers = {
             "Authorization": f"Basic {client_auth}",
@@ -149,8 +151,8 @@ class Spotify(Device):
         payload = "&".join(
             [
                 "grant_type=refresh_token",
-                f"refresh_token={env.SPOTIFY_REFRESH_TOKEN}",
-                f"client_id={env.SPOTIFY_APP_ID}",
+                f"refresh_token={self.refresh_token}",
+                f"client_id={self.app_id}",
             ]
         )
         refresh_response = requests.post(f"{self.AUTH_URL}/api/token", headers=headers, data=payload)
