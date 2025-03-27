@@ -1,6 +1,6 @@
-; Store in /etc/systemd/service
-; Register via `systemctl enable home-automation-server`
-; Update via `systemctl daemon-reload`
+; Store in /etc/systemd/system
+; Register via `sudo systemctl enable home-automation-server`
+; Update via `sudo systemctl daemon-reload`
 
 [Unit]
 Description=Home Automation Server
@@ -12,7 +12,8 @@ Type=simple
 Restart=always
 RestartSec=1
 User=pi
-ExecStart=python3 /home/pi/home-automation-server/Server.py
+WorkingDirectory=/home/pi/home-automation-server
+ExecStart=/home/pi/.local/bin/poetry run python home_automation_server/main.py
 
 [Install]
 WantedBy=multi-user.target
