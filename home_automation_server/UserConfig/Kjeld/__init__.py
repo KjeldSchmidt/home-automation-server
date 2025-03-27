@@ -21,7 +21,7 @@ def initialize(app: Flask, mqtt_handler: MqttHandler) -> ControllerCollection:
     zigbee_lights = {
         name: ZigbeeLight(app, name, lamp_ids, mqtt_handler) for name, lamp_ids in DeviceConfig.zigbee_lights.items()
     }
-    spotify = Spotify(app)
+    spotify = Spotify(app, "", "", "")  # Todo
 
     main_device_group = ControllerCollection(
         app, "kjeld", alarm, zigbee_lights, esp_neopixel_lights, global_state, spotify
