@@ -33,13 +33,14 @@ class Spotify(Device):
     REDIRECT_URI = "http://192.168.178.2:5000/spotify/login/callback"
 
     def __init__(self, app: Flask, app_id: str, app_secret: str, refresh_token: str):
-        refresh_response = self.refresh_access_token()
-        self.token: str | None = refresh_response.access_token
-        self.token_expiry = refresh_response.expiry_datetime
         self._setup_routes(app)
         self.app_id = app_id
         self.app_secret = app_secret
         self.refresh_token = refresh_token
+
+        refresh_response = self.refresh_access_token()
+        self.token: str | None = refresh_response.access_token
+        self.token_expiry = refresh_response.expiry_datetime
 
     def _setup_routes(self, app: Flask) -> None:
         @app.route("/spotify/next")
