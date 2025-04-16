@@ -1,3 +1,5 @@
+import dataclasses
+import json
 from typing import Callable, Any, TypeAlias
 
 import paho.mqtt.client as mqtt
@@ -9,6 +11,12 @@ from paho.mqtt.enums import CallbackAPIVersion
 UserData: TypeAlias = Any  # type: ignore[explicit-any]
 Message: TypeAlias = mqtt.MQTTMessage
 MessageHandler: TypeAlias = Callable[[mqtt.Client, UserData, Message], None]
+
+
+@dataclasses.dataclass
+class RegisteredMessageHandler:
+    callback: MessageHandler
+    topic: str | None
 
 
 class MqttHandler:
@@ -24,7 +32,7 @@ class MqttHandler:
         mqtt_client.connect("127.0.0.1", 1883, 60)
         mqtt_client.loop_start()
 
-        self._on_message_handlers: list[MessageHandler] = []
+        self._on_message_handlers: list[RegisteredMessageHandler] = []
         self.mqtt_client = mqtt_client
 
     @staticmethod
@@ -53,13 +61,19 @@ class MqttHandler:
         # To achieve this, we create the handler as a closure, binding self to the handler permanently.
         def on_message_handler(client: mqtt.Client, userdata: UserData, msg: mqtt.MQTTMessage) -> None:
             print(f"Received Mqtt message, topic: {msg.topic}, msg: {msg.payload.decode()}")
-            for message_handler in self._on_message_handlers:
-                message_handler(client, userdata, msg)
+            for registered_message_handler in self._on_message_handlers:
+                if registered_message_handler.topic not in [msg.topic, None]:
+                    continue
+
+                payload: str = msg.payload.decode()
+                payload_dict = json.loads(payload)
+                registered_message_handler.callback(client, userdata, payload_dict)
 
         return on_message_handler
 
-    def add_message_handler(self, handler: MessageHandler) -> None:
-        self._on_message_handlers.append(handler)
+    def add_message_handler(self, handler: MessageHandler, topic: str = None) -> None:
+        new_registered_handler = RegisteredMessageHandler(callback=handler, topic=topic)
+        self._on_message_handlers.append(new_registered_handler)
 
     def publish(
         self,
