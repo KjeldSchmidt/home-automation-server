@@ -5,12 +5,12 @@ from .DeviceConfig import DeviceConfig
 from Device.GlobalState import GlobalState
 from Alarm import Alarm
 from Device.ZigbeeLight import ZigbeeLight
-from .ControllerCollection import ControllerCollection
+from .KjeldApartment import KjeldApartment
 from Device.Spotify import Spotify
 from Device.EspNeopixelLight import EspNeopixelLight
 
 
-def initialize(app: Flask, mqtt_handler: MqttHandler) -> ControllerCollection:
+def initialize(app: Flask, mqtt_handler: MqttHandler) -> KjeldApartment:
     global_state = GlobalState(app)
 
     esp_neopixel_lights = {
@@ -23,7 +23,7 @@ def initialize(app: Flask, mqtt_handler: MqttHandler) -> ControllerCollection:
     }
     spotify = Spotify(app, "", "", "")  # Todo
 
-    main_device_group = ControllerCollection(
+    main_device_group = KjeldApartment(
         app, "kjeld", alarm, zigbee_lights, esp_neopixel_lights, global_state, spotify
     )
     return main_device_group

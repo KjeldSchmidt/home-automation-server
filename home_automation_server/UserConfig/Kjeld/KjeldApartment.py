@@ -12,7 +12,7 @@ from Presets.Preset import Preset
 from DeviceGroup.DeviceGroup import DeviceGroup
 
 
-class ControllerCollection(DeviceGroup):
+class KjeldApartment(DeviceGroup):
     def __init__(
         self,
         app: Flask,
