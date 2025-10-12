@@ -10,7 +10,7 @@ from Device.Spotify import Spotify
 from Device.EspNeopixelLight import EspNeopixelLight
 from Presets.Preset import Preset
 from DeviceGroup.DeviceGroup import DeviceGroup
-from main import mqtt_handler
+from MqttHandler import MqttHandler
 
 
 class KjeldApartment(DeviceGroup):
@@ -23,6 +23,7 @@ class KjeldApartment(DeviceGroup):
         esp_neopixel_lights: dict[str, EspNeopixelLight],
         global_state: GlobalState,
         spotify: Spotify,
+        mqtt_handler: MqttHandler,
     ):
         self.controllers: list[Device] = [
             *esp_neopixel_lights.values(),
@@ -44,6 +45,7 @@ class KjeldApartment(DeviceGroup):
         self.zigbee_lights = zigbee_lights
         self.esp_neopixel_lights = esp_neopixel_lights
         self.global_state = global_state
+        self.mqtt_handler = mqtt_handler
 
         self.configure_lights_to_be_full_brightness_when_they_connect()
 
@@ -56,7 +58,7 @@ class KjeldApartment(DeviceGroup):
             if "ceiling" in connected_device:
                 self.zigbee_lights[connected_device].set_brightness_all(255)
 
-        mqtt_handler.add_message_handler(turn_on_newly_connected_ceiling_lights, "zigbee2mqtt/bridge/event")
+        self.mqtt_handler.add_message_handler(turn_on_newly_connected_ceiling_lights, "zigbee2mqtt/bridge/event")
 
     def turn_off_all(self: Self) -> None:
         for controller in self.controllers:

@@ -1,5 +1,6 @@
 from flask import Flask
 
+import env
 from MqttHandler import MqttHandler
 from .DeviceConfig import DeviceConfig
 from Device.GlobalState import GlobalState
@@ -21,9 +22,9 @@ def initialize(app: Flask, mqtt_handler: MqttHandler) -> KjeldApartment:
     zigbee_lights = {
         name: ZigbeeLight(app, name, lamp_ids, mqtt_handler) for name, lamp_ids in DeviceConfig.zigbee_lights.items()
     }
-    spotify = Spotify(app, "", "", "")  # Todo
+    spotify = Spotify(app, env.SPOTIFY_APP_ID, env.SPOTIFY_APP_SECRET, env.SPOTIFY_REFRESH_TOKEN)  # Todo
 
     main_device_group = KjeldApartment(
-        app, "kjeld", alarm, zigbee_lights, esp_neopixel_lights, global_state, spotify
+        app, "kjeld", alarm, zigbee_lights, esp_neopixel_lights, global_state, spotify, mqtt_handler
     )
     return main_device_group
