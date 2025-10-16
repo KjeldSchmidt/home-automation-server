@@ -8,17 +8,19 @@
         {% for mode in light.available_modes %}
             <button onclick="fetch('/esp_neopixel_light/{{ light.name }}/mode/{{ mode }}')">{{mode}}</button>
         {% endfor %}
+        <button onclick="document.getElementById('colorModal-{{ light.name }}').showModal()">Color Wheel</button>
     </div>
 </div>
 
-<details>
-    <summary>Color Wheel</summary>
+
+<dialog id="colorModal-{{ light.name }}" style="padding:1em; border:none; border-radius:8px;">
     <div id="picker-{{ light.name }}"></div>
-    <script type="text/javascript">
+    <button onclick="this.closest('dialog').close()">Close</button>
+    <script>
         var colorPicker = new iro.ColorPicker('#picker-{{ light.name }}', { layoutDirection: "horizontal" });
         colorPicker.on('color:change', color => {
             const colorString = "0x" + color.hexString.substring(1);
-            fetch( "/esp_neopixel_light/{{ light.name }}/mode/SingleColor&color=" + colorString );
+            fetch("/esp_neopixel_light/{{ light.name }}/mode/SingleColor&color=" + colorString);
         });
     </script>
-</details>
+</dialog>
