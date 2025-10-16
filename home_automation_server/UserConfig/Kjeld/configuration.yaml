@@ -1,11 +1,12 @@
 homeassistant: false
-permit_join: false
+permit_join: true
 mqtt:
   base_topic: zigbee2mqtt
   server: mqtt://localhost
 serial:
-  port: /dev/ttyAMA0
+  port: /dev/ttyS0
   adapter: deconz
+  baudrate: 38400
 advanced:
   network_key:
     - 1
@@ -24,6 +25,7 @@ advanced:
     - 39
     - 139
     - 66
+  log_output: ['console']
 
 devices:
   '0x680ae2fffe6a2ac5':

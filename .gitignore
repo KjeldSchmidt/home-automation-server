@@ -3,3 +3,4 @@ venv
 wsl-venv
 __pycache__
 home_automation_server/env.py
+requirements.txt

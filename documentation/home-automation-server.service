@@ -13,7 +13,7 @@ Restart=always
 RestartSec=1
 User=pi
 WorkingDirectory=/home/pi/home-automation-server
-ExecStart=/home/pi/.local/bin/poetry run python home_automation_server/main.py
+ExecStart=/home/pi/home-automation-server/venv/bin/python home_automation_server/main.py
 
 [Install]
 WantedBy=multi-user.target
