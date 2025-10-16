@@ -3,11 +3,12 @@ from typing_extensions import Self
 from flask import Flask, render_template
 
 from Device.Device import Device
-from Alarm import Alarm
+from GuiElements.Alarm import Alarm
 from Device.ZigbeeLight import ZigbeeLight
 from Device.GlobalState import GlobalState
 from Device.Spotify import Spotify
 from Device.EspNeopixelLight import EspNeopixelLight
+from GuiElements.Divider import Divider
 from Presets.Preset import Preset
 from DeviceGroup.DeviceGroup import DeviceGroup
 from MqttHandler import MqttHandler
@@ -34,9 +35,13 @@ class KjeldApartment(DeviceGroup):
 
         self.gui_elements = [
             *esp_neopixel_lights.values(),
+            Divider,
             alarm,
+            Divider,
             *zigbee_lights.values(),
+            Divider,
             global_state,
+            Divider,
             spotify,
         ]
 
@@ -49,8 +54,8 @@ class KjeldApartment(DeviceGroup):
 
         self.configure_lights_to_be_full_brightness_when_they_connect()
 
-    def configure_lights_to_be_full_brightness_when_they_connect(self):
-        def turn_on_newly_connected_ceiling_lights(client, userdata, payload):
+    def configure_lights_to_be_full_brightness_when_they_connect(self) -> None:
+        def turn_on_newly_connected_ceiling_lights(client, userdata, payload) -> None:
             connected_device = payload["data"]["friendly_name"]
             if not payload["type"] == "device_announce":
                 return

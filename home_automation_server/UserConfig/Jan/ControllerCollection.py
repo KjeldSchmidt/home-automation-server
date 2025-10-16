@@ -6,6 +6,7 @@ from Device.Device import Device
 from Alarm import Alarm
 from Device.ZigbeeLight import ZigbeeLight
 from DeviceGroup.DeviceGroup import DeviceGroup
+from GuiElements.Divider import Divider
 
 
 class ControllerCollection(DeviceGroup):
@@ -22,6 +23,7 @@ class ControllerCollection(DeviceGroup):
 
         self.gui_elements = [
             alarm,
+            Divider,
             *zigbee_lights.values(),
         ]
 

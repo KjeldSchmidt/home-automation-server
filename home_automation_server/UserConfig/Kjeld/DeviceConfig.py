@@ -20,4 +20,3 @@ class DeviceConfig:
         ],
     }
     esp_neopixel_lights = {"bedLamp": "192.168.178.26", "beamLamp": "192.168.178.48", "couchLamp": "192.168.178.95"}
-

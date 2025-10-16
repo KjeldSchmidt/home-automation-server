@@ -4,7 +4,7 @@ import env
 from MqttHandler import MqttHandler
 from .DeviceConfig import DeviceConfig
 from Device.GlobalState import GlobalState
-from Alarm import Alarm
+from GuiElements.Alarm import Alarm
 from Device.ZigbeeLight import ZigbeeLight
 from .KjeldApartment import KjeldApartment
 from Device.Spotify import Spotify
