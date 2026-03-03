@@ -4,9 +4,8 @@ mqtt:
   base_topic: zigbee2mqtt
   server: mqtt://localhost
 serial:
-  port: /dev/ttyS0
-  adapter: deconz
-  baudrate: 38400
+  port: /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_8058eef9cbc2ef11acb957ac8048b910-if00-port0
+  adapter: ember
 advanced:
   network_key:
     - 1
@@ -26,6 +25,10 @@ advanced:
     - 139
     - 66
   log_output: ['console']
+
+frontend:
+  enabled: true
+  port: 5001
 
 devices:
   '0x680ae2fffe6a2ac5':

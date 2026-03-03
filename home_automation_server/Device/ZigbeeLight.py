@@ -46,7 +46,7 @@ class ZigbeeLight(Device):
         self.send_to_all_lamps(f'{{ "brightness": "{brightness}" }}')
 
     def set_color_temp_all(self, color_temp: int) -> None:
-        self.send_to_all_lamps(f'{{ "color_temp": "{color_temp}" }}')
+        self.send_to_all_lamps(f'{{ "color_temp": {color_temp} }}')
 
     def toggle(self) -> None:
         self.state = self.state.next()
