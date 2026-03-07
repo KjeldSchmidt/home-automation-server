@@ -56,12 +56,15 @@ class KjeldApartment(DeviceGroup):
 
     def configure_lights_to_be_full_brightness_when_they_connect(self) -> None:
         def turn_on_newly_connected_ceiling_lights(client, userdata, payload) -> None:
-            connected_device = payload["data"]["friendly_name"]
             if not payload["type"] == "device_announce":
                 return
 
+            connected_device = payload["data"]["friendly_name"]
+
             if "ceiling" in connected_device:
-                self.zigbee_lights[connected_device].set_brightness_all(255)
+                self.mqtt_handler.publish(
+                    topic=f"zigbee2mqtt/{connected_device}/set", payload=f'{{ "brightness": "255" }}'
+                )
 
         self.mqtt_handler.add_message_handler(turn_on_newly_connected_ceiling_lights, "zigbee2mqtt/bridge/event")
 
